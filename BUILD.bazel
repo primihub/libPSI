@@ -51,6 +51,7 @@ cc_library(
     srcs = glob(
         [
             "libPSI/**/*.cpp",
+            "libPSI/**/*.h",
             #"frontend/**/*.cpp",
         ],
 
@@ -62,12 +63,13 @@ cc_library(
     ]),
     visibility = ["//visibility:public"],
     linkopts = ["-pthread -lstdc++"],
-    copts = ["-std=c++14 -O0 -g -ggdb -rdynamic -IlibOTe -maes -msse2 -msse3 -msse4.1 -mpclmul"],
+    copts = ["-I@ntl//:ntl/include -IlibOTe -std=c++14 -O0 -g -ggdb -rdynamic -maes -msse2 -msse3 -msse4.1 -mpclmul"],
     linkstatic = True,
     deps = [
         ":libpsi_config",
         "@cryptoTools//:cryptoTools",
         "@osu_libote//:libOTe",
+        "@ntl//:ntl",
     ],
 )
 

@@ -95,6 +95,16 @@ http_archive(
     urls = ["https://github.com/yankaili2006/cryptoTools/archive/refs/tags/v2.0.zip"],
 )
 
+# ntl
+http_archive(
+    name = "ntl",
+    build_file = "//bazel:ntl.BUILD",
+    #sha256 = "6f021f24136eb177af38af3bf5d53b3592a1fe1e71d1c098318488a85b0afc3a",
+    strip_prefix = "ntl-main",
+    urls = ["https://github.com/libntl/ntl/archive/refs/heads/main.zip"],
+)
+
+
 new_git_repository(
     name = "toolkit_relic",
     build_file = "//bazel:BUILD.relic",

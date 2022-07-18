@@ -18,6 +18,7 @@ genrule(
 #define LIBOTE_VERSION (LIBOTE_VERSION_MAJOR * 10000 + LIBOTE_VERSION_MINOR * 100 + LIBOTE_VERSION_PATCH) \r\n \
 /* #define ENABLE_SIMPLESTOT ON */ \r\n \
 /* #define ENABLE_SIMPLESTOT_ASM ON */ \r\n \
+#define ENABLE_OOS ON \r\n \
 #if defined(ENABLE_SIMPLESTOT_ASM) && defined(_MSC_VER) \r\n \
     #undef ENABLE_SIMPLESTOT_ASM \r\n \
     #pragma message(\\"ENABLE_SIMPLESTOT_ASM should not be defined on windows.\\") \r\n \
