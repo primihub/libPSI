@@ -21,8 +21,9 @@ genrule(
     ],
     cmd = """
         set -x
-        NTL_ROOT=$$(dirname $(location src))
-        pushd $$NTL_ROOT 
+        NTL_ROOT=$$(dirname $(location README))
+        pushd $$NTL_ROOT
+            cd src
             ./configure
             make
         popd
