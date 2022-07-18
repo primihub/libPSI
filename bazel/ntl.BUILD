@@ -21,7 +21,7 @@ genrule(
     ],
     cmd = """
         set -x
-        NTL_ROOT=$$(dirname $(location src/configure))
+        NTL_ROOT=$$(dirname $(location src))
         pushd $$NTL_ROOT 
             ./configure
             make
