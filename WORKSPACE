@@ -95,8 +95,9 @@ http_archive(
 #    urls = ["https://github.com/yankaili2006/cryptoTools/archive/refs/tags/v2.0.zip"],
 #)
 
-git_repository(
+new_git_repository(
     name = "cryptoTools",
+    build_file = "//bazel:cryptoTools.BUILD",
     # commit = "1e3a69bf2d5cd10c34b74f066054cd335d033d71",
     branch = "master",
     remote = "https://github.com/yankaili2006/cryptoTools.git",
