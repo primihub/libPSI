@@ -87,12 +87,20 @@ http_archive(
 )
 
 # cryptoTools
-http_archive(
+#http_archive(
+#    name = "cryptoTools",
+#    build_file = "//bazel:cryptoTools.BUILD",
+#    #sha256 = "6f021f24136eb177af38af3bf5d53b3592a1fe1e71d1c098318488a85b0afc3a",
+#    strip_prefix = "cryptoTools-2.0",
+#    urls = ["https://github.com/yankaili2006/cryptoTools/archive/refs/tags/v2.0.zip"],
+#)
+
+git_repository(
     name = "cryptoTools",
-    build_file = "//bazel:cryptoTools.BUILD",
-    #sha256 = "6f021f24136eb177af38af3bf5d53b3592a1fe1e71d1c098318488a85b0afc3a",
-    strip_prefix = "cryptoTools-2.0",
-    urls = ["https://github.com/yankaili2006/cryptoTools/archive/refs/tags/v2.0.zip"],
+    # commit = "1e3a69bf2d5cd10c34b74f066054cd335d033d71",
+    branch = "master",
+    remote = "https://github.com/yankaili2006/cryptoTools.git",
+    # shallow_since = "1591047380 -0700",
 )
 
 # ntl
@@ -107,7 +115,7 @@ http_archive(
 git_repository(
     name = "ntl",
     # commit = "1e3a69bf2d5cd10c34b74f066054cd335d033d71",
-    branch = "master",
+    branch = "main",
     remote = "https://github.com/yankaili2006/ntl.git",
     # shallow_since = "1591047380 -0700",
 )

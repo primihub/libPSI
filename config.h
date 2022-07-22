@@ -27,3 +27,5 @@
 
 // build the library with PRTY PSI enabled
 #define ENABLE_PRTY_PSI  1
+
+#define ENABLE_OOS 1
