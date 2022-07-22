@@ -2,7 +2,6 @@
 out/
 CMakeSettings.json
 thirdparty/
-.bazelrc
 .vscode/
 bazel-bin
 bazel-libPSI
