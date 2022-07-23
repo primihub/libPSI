@@ -66,7 +66,7 @@ cc_library(
     copts = ["-I. -I@ntl//:libntl -std=c++14 -O0 -g -ggdb -rdynamic -maes -msse2 -msse3 -msse4.1 -mpclmul"],
     deps = [
         ":libpsi_config",
-        "@cryptoTools//:cryptoTools",
+        "@ladnir_cryptoTools//:libcryptoTools",
         "@osu_libote//:libOTe",
         "@ntl//:libntl",
         "@google_sparsehash//:sparsehash",

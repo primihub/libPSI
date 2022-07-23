@@ -96,7 +96,7 @@ http_archive(
 #)
 
 new_git_repository(
-    name = "cryptoTools",
+    name = "ladnir_cryptoTools",
     build_file = "//bazel:cryptoTools.BUILD",
     # commit = "1e3a69bf2d5cd10c34b74f066054cd335d033d71",
     branch = "master",

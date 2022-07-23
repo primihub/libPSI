@@ -63,7 +63,7 @@ genrule(
 )
 
 cc_library(
-    name = "cryptoTools",
+    name = "libcryptoTools",
     srcs = glob(
                 ["cryptoTools/Circuit/*.cpp",
                 "cryptoTools/Common/*.cpp",
@@ -84,6 +84,10 @@ cc_library(
     includes = [".", ":cryptoTools_config_h"],
     copts = ["-I@tookit_relic//:relic/include -O0 -g -ggdb -rdynamic -maes -msse2 -msse3 -msse4.1 -mpclmul -DENABLE_CIRCUITS=ON -DENABLE_RELIC=ON -DENABLE_BOOST=ON -DENABLE_SSE=ON -DRAND=HASHD -DMULTI=PTHREAD -DBoost_USE_MULTITHREADED=ON"],
     linkopts = ["-pthread"],
+    # strip_include_prefix = "src",
+    # Using an empty include_prefix causes Bazel to emit -I instead of -iquote
+    # options for the include directory, so that #include <gmp.h> works.
+    #include_prefix = "",
     linkstatic = True,
     deps = [
                 "@boost//:fiber",

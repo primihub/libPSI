@@ -87,11 +87,15 @@ cc_library(
                     ["libOTe/**/*.h"],
                 ),
     includes = ["./", ":libOTe_config_h"],
-    copts = ["-I. -I@cryptoTools//:cryptoTools -std=c++14 -O0 -g -ggdb -rdynamic -IlibOTe -maes -msse2 -msse3 -msse4.1 -mpclmul"],
+    copts = ["-std=c++14 -O0 -g -ggdb -rdynamic -maes -msse2 -msse3 -msse4.1 -mpclmul"],
     linkopts = ["-pthread"],
+    # strip_include_prefix = "src",
+    # Using an empty include_prefix causes Bazel to emit -I instead of -iquote
+    # options for the include directory, so that #include <gmp.h> works.
+    #include_prefix = "",
     linkstatic = True,
     deps = [
-                    "@cryptoTools//:cryptoTools",
+        "@ladnir_cryptoTools//:libcryptoTools",
     ],
 )
 
@@ -119,7 +123,7 @@ cc_library(
     copts = ["-std=c++14 -O0 -g -ggdb -rdynamic -maes -msse2 -msse3 -msse4.1 -mpclmul -DENABLE_CIRCUITS=ON -DENABLE_RELIC=ON -DENABLE_BOOST=ON -DENABLE_SSE=ON"],
     linkopts = ["-pthread -lstdc++"],
     deps = [
-                "@cryptoTools//:tests_cryptoTools",
+                "@ladnir_cryptoTools//:tests_cryptoTools",
                 ":libOTe_Tests",
                 ":SimplestOT",
     ],
@@ -130,15 +134,15 @@ cc_binary(
     srcs = glob(
                 ["frontend/**/*.cpp"],
                 ["frontend/**/*.h"],
-                ) + ["@cryptoTools//:tests_cryptoTools/UnitTests.h"],
-    includes = ["./", "@cryptoTools/tests_cryptoTools/"],
-    copts = ["-I@cryptoTools/tests_cryptoTools/ -std=c++14"],
+                ) + ["@ladnir_cryptoTools//:tests_cryptoTools/UnitTests.h"],
+    includes = ["./", "@ladnir_cryptoTools/tests_cryptoTools/"],
+    copts = ["-I@ladnir_cryptoTools/tests_cryptoTools/ -std=c++14"],
     linkopts = ["-pthread",
             "-L@external/cryptoTools/tests_cryptoTools/",
     ],
     linkstatic = False,
     deps = [
-                "@cryptoTools//:tests_cryptoTools",
+                "@ladnir_cryptoTools//:tests_cryptoTools",
                 ":lib_frontend_libOTe",
                 ":SimplestOT",
         ],
