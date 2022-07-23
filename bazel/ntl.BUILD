@@ -1,5 +1,7 @@
 package(default_visibility = ["//visibility:public",],)
 
+# https://khjtony.github.io/programming/2018/12/31/Add-external-library-to-bazel.html
+
 include_files = [
     "includes/NTL/ALL_FEATURES.h",
     "includes/NTL/BasicThreadPool.h",
