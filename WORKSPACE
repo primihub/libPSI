@@ -113,22 +113,22 @@ new_git_repository(
 #    urls = ["https://github.com/libntl/ntl/archive/refs/heads/main.zip"],
 #)
 
-git_repository(
-    name = "ntl",
-    # commit = "1e3a69bf2d5cd10c34b74f066054cd335d033d71",
-    branch = "main",
-    remote = "https://github.com/yankaili2006/ntl.git",
-    # shallow_since = "1591047380 -0700",
-)
-
-#new_git_repository(
+#git_repository(
 #    name = "ntl",
-#    build_file = "//bazel:ntl.BUILD",
 #    # commit = "1e3a69bf2d5cd10c34b74f066054cd335d033d71",
 #    branch = "main",
-#    remote = "https://github.com/libntl/ntl.git",
+#    remote = "https://github.com/yankaili2006/ntl.git",
 #    # shallow_since = "1591047380 -0700",
 #)
+
+new_git_repository(
+    name = "ntl",
+    build_file = "//bazel:ntl.BUILD",
+    # commit = "1e3a69bf2d5cd10c34b74f066054cd335d033d71",
+    branch = "main",
+    remote = "https://github.com/libntl/ntl.git",
+    # shallow_since = "1591047380 -0700",
+)
 
 new_git_repository(
     name = "toolkit_relic",

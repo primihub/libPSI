@@ -51,20 +51,19 @@ cc_library(
     srcs = glob(
         [
             "libPSI/**/*.cpp",
-            "libPSI/**/*.h",
+            #"libPSI/**/*.h",
             #"frontend/**/*.cpp",
         ],
 
     ),
-    includes = ["."],
+    includes = glob(["libPSI/**/*.h"]),
     hdrs = glob([
         "libPSI/**/*.h",
         #"frontend/**/*.h",
     ]),
     visibility = ["//visibility:public"],
     linkopts = ["-pthread -lstdc++"],
-    copts = ["-I. -I@cryptoTools//:cryptoTools/cryptoTools -I@ntl//:libntl -I@google_sparsehash//:sparsehash/src -I@osu_libote//:libOTe -std=c++14 -O0 -g -ggdb -rdynamic -maes -msse2 -msse3 -msse4.1 -mpclmul"],
-    linkstatic = True,
+    copts = ["-std=c++14 -O0 -g -ggdb -rdynamic -maes -msse2 -msse3 -msse4.1 -mpclmul"],
     deps = [
         ":libpsi_config",
         "@cryptoTools//:cryptoTools",

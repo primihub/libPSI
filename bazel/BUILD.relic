@@ -9,8 +9,7 @@ cc_library(
 
 genrule(
     name = "relic-build",
-    srcs = glob(["**/*"],
-    exclude=["bazel-*"]),
+    srcs = glob(["**/*"], exclude=["bazel-*"]),
     outs = [
         "librelic_s.a",
         "include/relic_conf.h",

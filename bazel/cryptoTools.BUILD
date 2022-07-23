@@ -35,12 +35,11 @@ genrule(
         echo "#pragma once \r\n \
 #define ENABLE_RELIC ON \r\n \
 #define ENABLE_CIRCUITS ON \r\n \
-#define ENABLE_FULL_GSL ON \r\n \
+#define ENABLE_SPAN_LITE ON \r\n \
 #define ENABLE_CPP_14 ON \r\n \
 #define ENABLE_BOOST ON \r\n \
 #define ENABLE_SSE ON \r\n \
 #define ENABLE_CPP_14 ON \r\n \
-#define ENABLE_FULL_GSL ON \r\n \
 #define ENABLE_NET_LOG ON \r\n \
 #define ENABLE_NASM ON \r\n \
 #if (defined(_MSC_VER) || defined(__SSE2__)) && defined(ENABLE_SSE) \r\n \

@@ -29,3 +29,4 @@
 #define ENABLE_PRTY_PSI  1
 
 #define ENABLE_OOS 1
+#define ENABLE_KKRT 1

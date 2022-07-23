@@ -16,11 +16,9 @@ genrule(
         echo "#pragma once \r\n \
 #include \\"libOTe/version.h\\" \r\n \
 #define LIBOTE_VERSION (LIBOTE_VERSION_MAJOR * 10000 + LIBOTE_VERSION_MINOR * 100 + LIBOTE_VERSION_PATCH) \r\n \
-#define ENABLE_BITPOLYMUL ON \r\n \
-#define ENABLE_SIMPLESTOT ON \r\n \
-#define ENABLE_SIMPLESTOT_ASM ON \r\n \
-#define ENABLE_MRR ON \r\n \
-#define ENABLE_MRR_TWIST ON \r\n \
+/* #define ENABLE_BITPOLYMUL ON */ \r\n \
+/* #define ENABLE_SIMPLESTOT ON */ \r\n \
+/* #define ENABLE_SIMPLESTOT_ASM ON */ \r\n \
 #define ENABLE_MR ON \r\n \
 #define OENABLE_MR_KYBERN \r\n \
 #define ENABLE_NP \r\n \
