@@ -56,19 +56,23 @@ cc_library(
         ],
 
     ),
-    includes = glob(["**/*.h"]),
     hdrs = glob([
         "libPSI/**/*.h",
         #"frontend/**/*.h",
     ]),
+    includes = ["libPSI"],
     visibility = ["//visibility:public"],
     linkopts = ["-pthread -lstdc++"],
-    copts = ["-I. -I@ntl//:libntl -std=c++14 -O0 -g -ggdb -rdynamic -maes -msse2 -msse3 -msse4.1 -mpclmul"],
+    copts = ["-I. -std=c++14 -O0 -g -ggdb -rdynamic -maes -msse2 -msse3 -msse4.1 -mpclmul"],
+    strip_include_prefix = "libPSI",
+    # Using an empty include_prefix causes Bazel to emit -I instead of -iquote
+    # options for the include directory, so that #include <gmp.h> works.
+    include_prefix = "libPSI",
     deps = [
         ":libpsi_config",
         "@ladnir_cryptoTools//:libcryptoTools",
         "@osu_libote//:libOTe",
-        "@ntl//:libntl",
+        "@github_ntl//:libntl",
         "@google_sparsehash//:sparsehash",
     ],
 )

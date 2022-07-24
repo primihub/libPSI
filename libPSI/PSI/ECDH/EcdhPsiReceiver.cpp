@@ -7,7 +7,7 @@ static_assert(0, "ENABLE_RELIC must be defined in libOTe");
 #endif
 
 #include "cryptoTools/Crypto/RCurve.h"
-#include "cryptoTools/Crypto/Curve.h"
+/* #include "cryptoTools/Crypto/Curve.h" */
 #include "cryptoTools/Common/Log.h"
 #include <cryptoTools/Crypto/RandomOracle.h>
 #include <unordered_map>
