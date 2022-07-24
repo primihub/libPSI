@@ -5,7 +5,7 @@
 #define ENABLE_DKT_PSI  1
 
 // build the library with GRR PSI enabled
-#define ENABLE_GRR_PSI  1
+/* #define ENABLE_GRR_PSI  1 */
 
 // build the library with RR16 PSI enabled
 #define ENABLE_RR16_PSI  1
@@ -28,5 +28,5 @@
 // build the library with PRTY PSI enabled
 #define ENABLE_PRTY_PSI  1
 
-#define ENABLE_OOS 1
-#define ENABLE_KKRT 1
+// #define ENABLE_OOS 1
+// #define ENABLE_KKRT 1
