@@ -2,3 +2,8 @@
 out/
 CMakeSettings.json
 thirdparty/
+.vscode/
+bazel-bin
+bazel-libPSI
+bazel-out
+bazel-testlogs
