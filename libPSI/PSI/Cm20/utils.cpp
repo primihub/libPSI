@@ -6,6 +6,10 @@
 
 namespace osuCrypto {
 
+	u64 h1LengthInBytes = 32;
+    u64 bucket1 = 1 << 10;
+    u64 bucket2 = 1 << 10;
+
 	u64 getWidthMeetStatSecParam(u64 n1, u64 n2, u64 m, u64 statSecParam, u64 cmpSecParam) {
 		typedef boost::multiprecision::number<boost::multiprecision::backends::cpp_bin_float<16>> T;
 		T p = boost::multiprecision::pow(1 - T(1.0) / m, n2);

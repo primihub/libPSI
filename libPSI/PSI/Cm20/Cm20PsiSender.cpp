@@ -59,20 +59,28 @@ namespace osuCrypto
         commonAes.setKey(commonSeed);
         RandomOracle H1(h1LengthInBytes);
 
-        block* aesInput = new block[mReceiverSize];
-		block* aesOutput = new block[mReceiverSize];
+        block* aesInput = new block[8];
+		block* aesOutput = new block[8];
         u8* h1Output = new u8[h1LengthInBytes];
-		for (auto i = 0; i < mSenderSize; ++i) {
-			H1.Reset();
-			H1.Update((u8*)(inputs.data() + i), sizeof(block));
-			H1.Final(h1Output);
-			
-			aesInput[i] = *(block*)h1Output;
-			sendSet[i] = *(block*)(h1Output + sizeof(block));
-		}
-        commonAes.ecbEncBlocks(aesInput, mSenderSize, aesOutput);
-		for (auto i = 0; i < mSenderSize; ++i) {
-            sendSet[i] = _mm_xor_si128(sendSet[i], aesOutput[i]);
+		for (auto low = 0; low < mSenderSize; low += 8) {
+            auto up = low + 8 < mSenderSize ? low + 8 : mSenderSize;
+            for (auto j = low; j < up; j++) {
+                H1.Reset();
+                H1.Update((u8*)(inputs.data() + j), sizeof(block));
+                H1.Final(h1Output);
+                aesInput[j-low] = *(block*)h1Output;
+			    sendSet[j] = *(block*)(h1Output + sizeof(block));
+            }
+            if ((up - low) == 8) {
+                commonAes.ecbEnc8Blocks(aesInput, aesOutput);
+            } else {
+                for (auto j = 0; j < (up-low); j++) {
+                    commonAes.ecbEncBlock(aesInput[j], aesOutput[j]);
+                }
+            }
+            for (auto j = low; j < up; j++) {
+                sendSet[j] = _mm_xor_si128(sendSet[j], aesOutput[j-low]);
+            }
 		}
 
         delete[] aesInput;

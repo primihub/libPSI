@@ -22,10 +22,6 @@ namespace osuCrypto
         u64 height, width;
         std::vector<u32> mIntersection;
 
-        u64 h1LengthInBytes = 32;
-        u64 bucket1 = 1 << 8;
-        u64 bucket2 = 1 << 8;
-
         block commonSeed;
         PRNG mPrng;
         

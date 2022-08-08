@@ -20,10 +20,6 @@ namespace osuCrypto
 		u64 mSenderSize, mReceiverSize, mStatSecParam;
 		u64 height, width;
 
-        u64 h1LengthInBytes = 32;
-        u64 bucket1 = 1 << 8;
-        u64 bucket2 = 1 << 8;
-
 		block commonSeed;
 		PRNG mPrng; 
 
