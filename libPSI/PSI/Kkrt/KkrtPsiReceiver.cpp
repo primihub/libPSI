@@ -240,8 +240,8 @@ throw std::runtime_error("base OTs must be set or enable base OTs and IKNP in li
         }
         setTimePoint("kkrt.R Online.Bucket done");
 
-        //u8 dummy[1];
-        //chl.recv(dummy, 1);
+        u8 dummy[1];
+        chl.recv(dummy, 1);
     }
 }
 #endif
