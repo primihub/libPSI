@@ -168,7 +168,6 @@ namespace osuCrypto
     void Cm20PsiReceiver::computeInputsHash(std::unordered_map<u64, std::vector<std::pair<block, u32>>> &allHashes, u8** transHashInputs) {
         /////////////////// Compute hash outputs ///////////////////////////
         u64 hashLengthInBytes = (ceil(mStatSecParam+log2(mSenderSize)+log2(mReceiverSize))+7)/8;
-        if (hashLengthInBytes < 8) hashLengthInBytes = 8;
         u64 widthInBytes = (width + 7) / 8;
         RandomOracle H(hashLengthInBytes);
 
@@ -177,6 +176,7 @@ namespace osuCrypto
 			hashInputs[i] = new u8[widthInBytes];
 		}
         u8 hashOutput[sizeof(block)];
+        memset(hashOutput, 0, sizeof(block));
         for (auto low = 0; low < mReceiverSize; low += bucket2) {
 			auto up = low + bucket2 < mReceiverSize ? low + bucket2 : mReceiverSize;
 			for (auto j = low; j < up; ++j) {
@@ -202,14 +202,16 @@ namespace osuCrypto
 
     void Cm20PsiReceiver::receiveSenderHashAndComputePsi(std::unordered_map<u64, std::vector<std::pair<block, u32>>> &allHashes, auto chl) {
         u64 hashLengthInBytes = (ceil(mStatSecParam+log2(mSenderSize)+log2(mReceiverSize))+7)/8;
-        if (hashLengthInBytes < 8) hashLengthInBytes = 8;
         u8* recvBuff = new u8[bucket2 * hashLengthInBytes];
 
+        u8 hashOutput[sizeof(block)];
+        memset(hashOutput, 0, sizeof(block));
         for (auto low = 0; low < mSenderSize; low += bucket2) {
 			auto up = low + bucket2 < mSenderSize ? low + bucket2 : mSenderSize;
 			chl.recv(recvBuff, (up - low) * hashLengthInBytes);
 			for (auto idx = 0; idx < up - low; ++idx) {
-				u64 mapIdx = *(u64*)(recvBuff + idx * hashLengthInBytes);
+                memcpy(hashOutput, recvBuff + idx * hashLengthInBytes, hashLengthInBytes);
+				u64 mapIdx = *(u64*)(hashOutput);
 				
 				auto found = allHashes.find(mapIdx);
 				if (found == allHashes.end()) continue;

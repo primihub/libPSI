@@ -149,7 +149,6 @@ namespace osuCrypto
 
     void Cm20PsiSender::computeInputsHashAndSend(u8** transHashInputs, auto chl) {
         u64 hashLengthInBytes = (ceil(mStatSecParam+log2(mSenderSize)+log2(mReceiverSize))+7)/8;
-        if (hashLengthInBytes < 8) hashLengthInBytes = 8;
         u64 widthInBytes = (width + 7) / 8;
 
         RandomOracle H(hashLengthInBytes);
