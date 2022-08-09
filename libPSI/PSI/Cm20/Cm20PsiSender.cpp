@@ -6,6 +6,7 @@
 #include "cryptoTools/Common/Timer.h"
 #include "libOTe/Base/BaseOT.h"
 #include "libOTe/TwoChooseOne/IknpOtExtReceiver.h"
+#include "cryptoTools/Common/BitVector.h"
 
 namespace osuCrypto
 {
