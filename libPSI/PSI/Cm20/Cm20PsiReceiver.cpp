@@ -36,7 +36,7 @@ namespace osuCrypto
         mStatSecParam = statSecParam;
         mSenderSize = senderSize;
         mReceiverSize = recverSize;
-        height = mReceiverSize * scale;
+        height = std::max(u64(256), u64(mReceiverSize * scale));
         width = getWidthMeetStatSecParam(mSenderSize, mReceiverSize, height);
         
         mPrng.SetSeed(seed);

@@ -492,7 +492,7 @@ int main(int argc, char** argv)
 			<< "   -" << ecdhTags[0] << "     : ECHD   - Diffie-Hellma key exchange (semihonest secure)\n"
 
 			<< "   -" << kkrtTag[0] << "    : KKRT16  - Hash to Bin & compare style (semi-honest secure, fastest)\n"
-			<< "   -" << cm20Tag[0] << "    : CM16  - Multi-Point OPRF & compare style (semi-honest secure, fastest)\n"
+			<< "   -" << cm20Tag[0] << "    : CM20  - Multi-Point OPRF & compare style (semi-honest secure, fastest)\n"
             << "   -" << drrnTag[0] << "  : DRRN17  - Two server PIR style (semi-honest secure)\n" 
 			<< std::endl;
 

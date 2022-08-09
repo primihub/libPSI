@@ -30,7 +30,7 @@ namespace osuCrypto
         mStatSecParam = statSec;
         mSenderSize = senderSize;
         mReceiverSize = receiverSize;
-        height = mReceiverSize * scale;
+        height = std::max(u64(256), u64(mReceiverSize * scale));
         width = getWidthMeetStatSecParam(mSenderSize, mReceiverSize, height);
 
         // we need a random hash function, so both commit to a seed and then decommit later
