@@ -620,7 +620,7 @@ void cm20Send(
                 sendChls[0].asyncSend(dummy, 1);
                 sendChls[0].recv(dummy, 1);
 
-                sendPSIs.init(setSize, setSize, 1, params.mStatSecParam, sendChls, prng.get<block>());
+                sendPSIs.init(setSize, setSize, 2, cc, params.mStatSecParam, sendChls, prng.get<block>());
 
                 //sendChls[0].asyncSend(dummy, 1);
                 //sendChls[0].recv(dummy, 1);
@@ -681,7 +681,7 @@ void cm20Recv(
                 recvPSIs.setTimer(timer);
                 auto start = timer.setTimePoint("start");
 
-                recvPSIs.init(setSize, setSize, 1, params.mStatSecParam, chls, prng.get<block>());
+                recvPSIs.init(setSize, setSize, 2, numThreads, params.mStatSecParam, chls, prng.get<block>());
 
                 //chls[0].asyncSend(dummy, 1);
                 //chls[0].recv(dummy, 1);
