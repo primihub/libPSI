@@ -92,9 +92,10 @@ namespace osuCrypto
         };
 
         std::thread threads[numThreads];
+        u64 thrdSize = std::ceil(1.0 * mSenderSize / numThreads);
         for (u64 i = 0; i < numThreads; i++) {
-            u64 start = i * mSenderSize / numThreads;
-            u64 end = start + mSenderSize / numThreads;
+            u64 start = i * thrdSize;
+            u64 end = start + thrdSize;
             threads[i] = std::thread(go, start, std::min(mSenderSize, end));
         }
         for (u64 i = 0; i < numThreads; i++) {
@@ -117,7 +118,7 @@ namespace osuCrypto
             u8* transLocations[widthBucket1];
             u8* matrixC[widthBucket1];
 		    for (auto i = 0; i < widthBucket1; ++i) {
-		    	transLocations[i] = new u8[mReceiverSize * locationInBytes + sizeof(u32)];
+		    	transLocations[i] = new u8[mSenderSize * locationInBytes + sizeof(u32)];
 		    	matrixC[i] = new u8[heightInBytes];
 		    }
             u8* recvMatrix = new u8[heightInBytes];
@@ -162,9 +163,10 @@ namespace osuCrypto
 		    }
         };
         std::thread threads[numThreads];
+        u64 thrdSize = std::ceil(1.0 * width / numThreads);
         for (u64 i = 0; i < numThreads; i++) {
-            u64 start = i * width / numThreads;
-            u64 end = start + width / numThreads;
+            u64 start = i * thrdSize;
+            u64 end = start + thrdSize;
             threads[i] = std::thread(go, i, start, std::min(width, end));
         }
         for (u64 i = 0; i < numThreads; i++) {
@@ -212,9 +214,10 @@ namespace osuCrypto
             }
         };
         std::thread threads[numThreads];
+        u64 thrdSize = std::ceil(1.0 * mSenderSize / numThreads);
         for (u64 i = 0; i < numThreads; i++) {
-            u64 start = i * mSenderSize / numThreads;
-            u64 end = start + mSenderSize / numThreads;
+            u64 start = i * thrdSize;
+            u64 end = start + thrdSize;
             threads[i] = std::thread(go, i, start, std::min(mSenderSize, end));
         }
         for (u64 i = 0; i < numThreads; i++) {

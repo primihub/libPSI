@@ -94,9 +94,10 @@ namespace osuCrypto
             delete[] h1Output;
 		};
         std::thread threads[numThreads];
+        u64 thrdSize = std::ceil(1.0 * mReceiverSize / numThreads);
         for (u64 i = 0; i < numThreads; i++) {
-            u64 start = i * mReceiverSize / numThreads;
-            u64 end = start + mReceiverSize / numThreads;
+            u64 start = i * thrdSize;
+            u64 end = start + thrdSize;
             threads[i] = std::thread(go, start, std::min(mReceiverSize, end));
         }
         for (u64 i = 0; i < numThreads; i++) {
@@ -177,9 +178,10 @@ namespace osuCrypto
             }
         };
         std::thread threads[numThreads];
+        u64 thrdSize = std::ceil(1.0 * width / numThreads);
         for (u64 i = 0; i < numThreads; i++) {
-            u64 start = i * width / numThreads;
-            u64 end = start + width / numThreads;
+            u64 start = i * thrdSize;
+            u64 end = start + thrdSize;
             threads[i] = std::thread(go, i, start, std::min(width, end));
         }
         for (u64 i = 0; i < numThreads; i++) {
@@ -224,9 +226,10 @@ namespace osuCrypto
 		    }
         };
         std::thread threads[numThreads];
+        u64 thrdSize = std::ceil(1.0 * mReceiverSize / numThreads);
         for (u64 i = 0; i < numThreads; i++) {
-            u64 start = i * mReceiverSize / numThreads;
-            u64 end = start + mReceiverSize / numThreads;
+            u64 start = i * thrdSize;
+            u64 end = start + thrdSize;
             threads[i] = std::thread(go, i, start, std::min(mReceiverSize, end));
         }
         for (u64 i = 0; i < numThreads; i++) {
@@ -269,9 +272,10 @@ namespace osuCrypto
             delete[] recvBuff;
         };
         std::thread threads[numThreads];
+        u64 thrdSize = std::ceil(1.0 * mSenderSize / numThreads);
         for (u64 i = 0; i < numThreads; i++) {
-            u64 start = i * mSenderSize / numThreads;
-            u64 end = start + mSenderSize / numThreads;
+            u64 start = i * thrdSize;
+            u64 end = start + thrdSize;
             threads[i] = std::thread(go, i, start, std::min(mSenderSize, end));
         }
         for (u64 i = 0; i < numThreads; i++) {
