@@ -54,6 +54,7 @@ rr17aSMTags{ "rr17a-sm" },
 rr17bTags{ "rr17b" },
 cm20Tag{ "cm20" },
 kkrtTag{ "kkrt" },
+mkkrtTag{ "mkkrt" },
 drrnTag{ "drrt" },
 ecdhTags{ "ecdh" },
 dktTags{ "dkt" },
@@ -239,9 +240,12 @@ void benchmark(
 			auto mode = params.mIdx ? EpMode::Server : EpMode::Client;
 			Endpoint ep(ios, params.mIP, mode);
 			params.mChls.resize(*std::max_element(params.mNumThreads.begin(), params.mNumThreads.end()));
+			params.mChls2.resize(*std::max_element(params.mNumThreads.begin(), params.mNumThreads.end()));
 
-			for (u64 i = 0; i < params.mChls.size(); ++i)
+			for (u64 i = 0; i < params.mChls.size(); ++i) {
 				params.mChls[i] = ep.addChannel();
+				params.mChls2[i] = ep.addChannel();
+			}
 
             if (params.mIdx == 0)
             {
@@ -255,11 +259,14 @@ void benchmark(
 				sendProtol(params);
 			}
 
-			for (u64 i = 0; i < params.mChls.size(); ++i)
+			for (u64 i = 0; i < params.mChls.size(); ++i) {
 				params.mChls[i].close();
+				params.mChls2[i].close();
+			}
 
 
 			params.mChls.clear();
+			params.mChls2.clear();
 			ep.stop();
 		};
 
@@ -446,6 +453,7 @@ int main(int argc, char** argv)
 		benchmark(rr17aSMTags, cmd, rr17aRecv_StandardModel, rr17aSend_StandardModel);
 		benchmark(rr17bTags, cmd, rr17bRecv, rr17bSend);
 		benchmark(kkrtTag, cmd, kkrtRecv, kkrtSend);
+		benchmark(mkkrtTag, cmd, mkkrtRecv, mkkrtSend);
 		benchmark(cm20Tag, cmd, cm20Recv, cm20Send);
 		benchmark(grrTags, cmd, grr18Recv, grr18Send);
 		benchmark(dktTags, cmd, DktRecv, DktSend);
@@ -462,6 +470,7 @@ int main(int argc, char** argv)
 		cmd.isSet(rr17aSMTags) == false &&
 		cmd.isSet(rr17bTags) == false &&
 		cmd.isSet(kkrtTag) == false &&
+		cmd.isSet(mkkrtTag) == false &&
 		cmd.isSet(cm20Tag) == false &&
         cmd.isSet(drrnTag) == false &&
         cmd.isSet(grrTags) == false &&
@@ -492,6 +501,7 @@ int main(int argc, char** argv)
 			<< "   -" << ecdhTags[0] << "     : ECHD   - Diffie-Hellma key exchange (semihonest secure)\n"
 
 			<< "   -" << kkrtTag[0] << "    : KKRT16  - Hash to Bin & compare style (semi-honest secure, fastest)\n"
+			<< "   -" << mkkrtTag[0] << "   : KKRT16  - Hash to Bin & compare style (semi-honest secure, fastest,multithread)\n"
 			<< "   -" << cm20Tag[0] << "    : CM20  - Multi-Point OPRF & compare style (semi-honest secure, fastest)\n"
             << "   -" << drrnTag[0] << "  : DRRN17  - Two server PIR style (semi-honest secure)\n" 
 			<< std::endl;

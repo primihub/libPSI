@@ -115,6 +115,8 @@ namespace osuCrypto
         auto go = [&](u64 pid, u64 start, u64 end) {
             AES commonAes;
             commonAes.setKey(commonSeed);
+            std::future<void> futs[widthBucket1];
+            bool futSets[widthBucket1] = {false};
 
             block randomLocations[bucket1];
             u8* matrixA[widthBucket1];
@@ -156,11 +158,13 @@ namespace osuCrypto
                     PRNG prng(otMessages[i + wLeft][0]);
                     prng.get(matrixA[i], heightInBytes);
                     prng.SetSeed(otMessages[i + wLeft][1]);
+                    if (futSets[i]) futs[i].get();
                     prng.get(sentMatrix[i], heightInBytes);
                     for (auto j = 0; j < heightInBytes; ++j) {
                         sentMatrix[i][j] ^= matrixA[i][j] ^ matrixDelta[i][j];
                     }
-                    chls[pid].asyncSendCopy(sentMatrix[i], heightInBytes);
+                    futs[i] = chls[pid].asyncSendFuture(sentMatrix[i], heightInBytes);
+                    futSets[i] = true;
                 }
                 ///////////////// Compute hash inputs (transposed) /////////////////////
                 for (auto i = 0; i < w; ++i) {
@@ -171,6 +175,7 @@ namespace osuCrypto
                 }
             }
             for (auto i = 0; i < widthBucket1; ++i) {
+                if (futSets[i]) futs[i].get();
                 delete[] transLocations[i];
                 delete[] matrixA[i];
                 delete[] matrixDelta[i];
@@ -307,18 +312,18 @@ namespace osuCrypto
 			memset(transHashInputs[i], 0, receiverSizeInBytes);
 		}
         computeAndSendMatrixAndComputeHashKey(recvSet, otMessages, transHashInputs, chls);
+        delete[] recvSet;
         setTimePoint("cm20.Recv.matrix.end");
 
         std::vector<std::unordered_map<u64, std::vector<std::pair<block, u32>>>> allHashes(numThreads);
         computeInputsHash(allHashes, transHashInputs);
+        for (auto i = 0; i < width; ++i) {
+			delete[] transHashInputs[i];
+		}
         setTimePoint("cm20.Recv.hash.end");
 
         receiveSenderHashAndComputePsi(allHashes, chls);
         setTimePoint("cm20.Recv.psi.end");
 
-        delete[] recvSet;
-        for (auto i = 0; i < width; ++i) {
-			delete[] transHashInputs[i];
-		}
     }
 }

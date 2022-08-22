@@ -7,6 +7,7 @@
 #include "libOTe/Base/BaseOT.h"
 #include "libOTe/TwoChooseOne/IknpOtExtReceiver.h"
 #include "cryptoTools/Common/BitVector.h"
+#include <future>
 
 namespace osuCrypto
 {
@@ -117,15 +118,20 @@ namespace osuCrypto
             block randomLocations[bucket1];
             u8* transLocations[widthBucket1];
             u8* matrixC[widthBucket1];
+            u8* recvMatrix[widthBucket1];
+            std::future<void> futs[widthBucket1];
 		    for (auto i = 0; i < widthBucket1; ++i) {
 		    	transLocations[i] = new u8[mSenderSize * locationInBytes + sizeof(u32)];
 		    	matrixC[i] = new u8[heightInBytes];
+                recvMatrix[i] = new u8[heightInBytes];
 		    }
-            u8* recvMatrix = new u8[heightInBytes];
 
             for (auto wLeft = start; wLeft < end; wLeft += widthBucket1) {
 		    	auto wRight = wLeft + widthBucket1 < end ? wLeft + widthBucket1 : end;
 		    	auto w = wRight - wLeft;
+                for (auto i = 0; i < w; ++i) {
+		    		futs[i] = chls[pid].asyncRecv(recvMatrix[i], heightInBytes);
+		    	}
 		    	//////////// Compute random locations (transposed) ////////////////
 		    	for (auto low = 0; low < mSenderSize; low += bucket1) {
 		    		auto up = low + bucket1 < mSenderSize ? low + bucket1 : mSenderSize;
@@ -140,10 +146,10 @@ namespace osuCrypto
 		    	for (auto i = 0; i < w; ++i) {
 		    		PRNG prng(otMessages[i + wLeft]);
 		    		prng.get(matrixC[i], heightInBytes);
-		    		chls[pid].recv(recvMatrix, heightInBytes);
+                    futs[i].get();
 		    		if (choices[i + wLeft]) {
 		    			for (auto j = 0; j < heightInBytes; ++j) {
-		    				matrixC[i][j] ^= recvMatrix[j];
+		    				matrixC[i][j] ^= recvMatrix[i][j];
 		    			}
 		    		}
 		    	}
@@ -156,10 +162,10 @@ namespace osuCrypto
 		    	}
 		    }
 
-            delete[] recvMatrix;
             for (auto i = 0; i < widthBucket1; ++i) {
                 delete[] transLocations[i];
                 delete[] matrixC[i];
+                delete[] recvMatrix[i];
 		    }
         };
         std::thread threads[numThreads];
@@ -187,7 +193,9 @@ namespace osuCrypto
                 hashInputs[i] = new u8[widthInBytes];
             }
             u8* sentBuff = new u8[bucket2 * hashLengthInBytes];
-
+            u8* futBuff = new u8[bucket2 * hashLengthInBytes];
+            std::future<void> fut;
+            bool futSet = false;
             for (auto low = start; low < end; low += bucket2) {
                 auto up = low + bucket2 < end ? low + bucket2 : end;
                 for (auto j = low; j < up; ++j) {
@@ -204,11 +212,14 @@ namespace osuCrypto
                     H.Final(hashOutput);
                     memcpy(sentBuff + (j - low) * hashLengthInBytes, hashOutput, hashLengthInBytes);
                 }
-                
-                chls[pid].asyncSendCopy(sentBuff, (up - low) * hashLengthInBytes);
+                if (futSet) fut.get();
+                memcpy(futBuff, sentBuff, (up - low) * hashLengthInBytes);
+                fut = chls[pid].asyncSendFuture(futBuff, (up - low) * hashLengthInBytes);
+                futSet = true;
             }
-
+            if (futSet) fut.get();
             delete[] sentBuff;
+            delete[] futBuff;
             for (auto i = 0; i < bucket2; ++i) {
                 delete[] hashInputs[i];
             }
@@ -250,15 +261,14 @@ namespace osuCrypto
 			memset(transHashInputs[i], 0, senderSizeInBytes);
 		}
         recvAndComputeMatrixAndComputeHashKey(sendSet, otMessages, choices, transHashInputs, chls);
+        delete[] sendSet;
         setTimePoint("cm20.Send.matrix.end");
 
         computeInputsHashAndSend(transHashInputs, chls);
-        setTimePoint("cm20.Send.hash.end");
-
-        delete[] sendSet;
         for (auto i = 0; i < width; ++i) {
 			delete[] transHashInputs[i];
 		}
+        setTimePoint("cm20.Send.hash.end");
     }
 }
 

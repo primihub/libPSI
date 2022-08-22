@@ -35,6 +35,12 @@ void kkrtRecv(
 void kkrtSend(
     LaunchParams& params);
 
+void mkkrtRecv(
+    LaunchParams& params);
+
+void mkkrtSend(
+    LaunchParams& params);
+
 void cm20Recv(
     LaunchParams& params);
 
