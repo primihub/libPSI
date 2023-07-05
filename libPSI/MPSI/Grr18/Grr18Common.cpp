@@ -4,7 +4,7 @@
 #include "Grr18Common.h"
 #include <random>
 #include "cryptoTools/Common/Log.h"
-#include <libPSI/Tools/SimpleIndex.h>
+#include "libPSI/Tools/SimpleIndex.h"
 #include <iomanip>
 #include <unordered_map>
 namespace osuCrypto

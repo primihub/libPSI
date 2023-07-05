@@ -11,11 +11,11 @@ static_assert(0,"ENABLE_KKRT_PSI must be defined.");
 static_assert(0,"ENABLE_KKRT must be defined in libOTe.");
 #endif
 
-#include <cryptoTools/Common/Defines.h>
-#include <cryptoTools/Common/CuckooIndex.h>
-#include <cryptoTools/Network/Channel.h>
-#include <libPSI/PSI/Kkrt/KkrtPsiSender.h>
-#include <libOTe/NChooseOne/Kkrt/KkrtNcoOtSender.h>
+#include "cryptoTools/Common/Defines.h"
+#include "cryptoTools/Common/CuckooIndex.h"
+#include "cryptoTools/Network/Channel.h"
+#include "libPSI/PSI/Kkrt/KkrtPsiSender.h"
+#include "libOTe/NChooseOne/Kkrt/KkrtNcoOtSender.h"
 #include <memory>
 
 namespace osuCrypto
@@ -40,8 +40,8 @@ namespace osuCrypto
 		std::vector<block> mPiS1, mPi1SigmaRS;
 
 
-        struct Item 
-        { 
+        struct Item
+        {
             block mVal;
             u32 mCuckooIdx;
             std::array<u32, 3> _padding;
@@ -63,13 +63,13 @@ namespace osuCrypto
 
 		u64 mClientSetSize, mServerSetSize;
 
-		// The number of regions that the server's cuckoo table is divided into. 
+		// The number of regions that the server's cuckoo table is divided into.
 		u64 mNumSimpleBins;
-		
+
 		// The number of queries that are made to any given bin (cuckoo table resions).
 		u64 mBinSize;
-		
-		// The number of cuckoo table items that any given DPF point corresponds to. 
+
+		// The number of cuckoo table items that any given DPF point corresponds to.
 		u64 mBigBlockSize;
 
 

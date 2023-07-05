@@ -11,13 +11,13 @@
 #pragma error("ENABLE_KKRT must be defined in libOTe.");
 #endif
 
-#include <cryptoTools/Common/Defines.h>
-#include <cryptoTools/Common/CuckooIndex.h>
-#include <cryptoTools/Network/Channel.h>
-#include <libOTe/NChooseOne/Kkrt/KkrtNcoOtReceiver.h>
-#include <libPSI/PSI/Kkrt/KkrtPsiReceiver.h>
+#include "cryptoTools/Common/Defines.h"
+#include "cryptoTools/Common/CuckooIndex.h"
+#include "cryptoTools/Network/Channel.h"
+#include "libOTe/NChooseOne/Kkrt/KkrtNcoOtReceiver.h"
+#include "libPSI/PSI/Kkrt/KkrtPsiReceiver.h"
 #include <unordered_set>
-#include <libPSI/Tools/SimpleIndex.h>
+#include "libPSI/Tools/SimpleIndex.h"
 
 
 namespace osuCrypto
@@ -29,7 +29,7 @@ namespace osuCrypto
 
         void init(Channel s0, Channel s1, u64 serverSetSize, u64 clientSetSize, block seed,
 			u64 numHash = 2,
-			double binScaler = 1, 
+			double binScaler = 1,
 			u64 cuckooSsp = 20,
 			u64 bigBlockSize = 8);
 

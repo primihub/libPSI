@@ -7,7 +7,7 @@
 #include "cryptoTools/Common/Timer.h"
 #include "libOTe/Base/BaseOT.h"
 #include "libOTe/TwoChooseOne/IknpOtExtReceiver.h"
-#include <cryptoTools/Common/Matrix.h>
+#include "cryptoTools/Common/Matrix.h"
 #include "cryptoTools/Common/CuckooIndex.h"
 //#include <unordered_map>
 #include "libPSI/Tools/SimpleIndex.h"
@@ -73,7 +73,7 @@ namespace osuCrypto
                 mOtSenders[i].mMultiKeyAES.setKeys(keys);
             });
         }
-        
+
         setTimePoint("kkrt.S offline.perm start");
 
         for (u64 i = 0; i < chls.size(); i++) {
@@ -358,7 +358,7 @@ namespace osuCrypto
                             for (;;) {
                                 bid = prng.get<u64>() % numBins;
                                 if (bid != binIdxs(i, (j+1)%numHashes) &&
-                                    bid != binIdxs(i, (j+2)%numHashes)) 
+                                    bid != binIdxs(i, (j+2)%numHashes))
                                     break;
                             }
                         }
@@ -370,7 +370,7 @@ namespace osuCrypto
         for (u64 pid = 0; pid < threadNum; pid++) {
             hashThrd[pid].join();
         }
-        
+
         for (u64 i = 1; i < numBins; i++) {
             binIndex[i] += binIndex[i - 1];
         }
@@ -453,7 +453,7 @@ namespace osuCrypto
                         return stepIdx < recvedIdx.load(std::memory_order::memory_order_acquire);
                     });
                     auto currentStepSize = std::min(stepSize, binEnd - stepIdx);
-                    init_ot(currentStepSize, prngs[pid], chls[pid], mOtSenders[pid]);   
+                    init_ot(currentStepSize, prngs[pid], chls[pid], mOtSenders[pid]);
                     mtx_que.lock();
                     u8 * buffer = recvQue.front();
                     recvQue.pop();
@@ -471,12 +471,12 @@ namespace osuCrypto
 
                     auto stepEnd = stepIdx + currentStepSize;
                     for (u64 bIdx = stepIdx; bIdx < stepEnd; bIdx++)
-                    {    
+                    {
                         for (u64 start = binIndex[bIdx]; start < binIndex[bIdx + 1]; start++) {
                             auto inputIdx = binIdx[start];
                             auto inputHash = binHash[start];
                             u8* dest = (u8*)&*(myMaskBuff.data() + myMaskBuff.stride() * inputHash + buffMask(inputHash, 0) * maskSize);
-                            mOtSenders[pid].encode(bIdx - stepIdx, &inputs[inputIdx], 
+                            mOtSenders[pid].encode(bIdx - stepIdx, &inputs[inputIdx],
                                     dest, maskSize);
                             buffMask(inputHash, 0)++;
                             if (buffMask(inputHash, 0) == stepSize) {
@@ -494,8 +494,8 @@ namespace osuCrypto
                     myMaskBuff(inputHash, stepSize * maskSize) = inputHash;
                     mchls[pid].asyncSendCopy(myMaskBuff.data() + myMaskBuff.stride() * inputHash, stepSize * maskSize + 1);
                 }
-     
-                
+
+
                 thrd.join();
             });
         }

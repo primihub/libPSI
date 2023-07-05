@@ -64,12 +64,20 @@ cc_library(
   srcs = glob([
     "libPSI/**/*.cpp",
     "libPSI/**/*.h",
-    #"frontend/**/*.cpp",
-    ]),
+    ],
+    exclude = [
+      "libPSI/MPSI/Grr18/*.cpp",
+      "libPSI/Tools/RandomShuffle.cpp",
+    ],
+  ),
   hdrs = glob([
-    "libPSI/**/*.h",
-    #"frontend/**/*.h",
-  ]),
+      "libPSI/**/*.h",
+    ],
+    exclude = [
+      "libPSI/MPSI/Grr18/*.h",
+      "libPSI/Tools/RandomShuffle.h",
+    ],
+  ),
   includes = ["libPSI"],
   visibility = ["//visibility:public"],
   linkopts = ["-pthread -lstdc++"],

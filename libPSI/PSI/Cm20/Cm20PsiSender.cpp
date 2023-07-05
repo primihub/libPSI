@@ -58,6 +58,7 @@ namespace osuCrypto
     }
 
     void Cm20PsiSender::randomizeInputs(block* sendSet, span<block> &inputs) {
+#ifdef ENABLE_SSE
         auto go = [&](u64 start, u64 end) {
             AES commonAes;
             commonAes.setKey(commonSeed);
@@ -102,6 +103,7 @@ namespace osuCrypto
         for (u64 i = 0; i < numThreads; i++) {
             threads[i].join();
         }
+#endif  // ENABLE_SSE
     }
 
     void Cm20PsiSender::recvAndComputeMatrixAndComputeHashKey(block *sendSet, std::vector<block> &otMessages, BitVector & choices, u8** transHashInputs, span<Channel> chls) {
@@ -135,7 +137,7 @@ namespace osuCrypto
 		    	//////////// Compute random locations (transposed) ////////////////
 		    	for (auto low = 0; low < mSenderSize; low += bucket1) {
 		    		auto up = low + bucket1 < mSenderSize ? low + bucket1 : mSenderSize;
-		    		commonAes.ecbEncBlocks(sendSet + low, up - low, randomLocations); 
+		    		commonAes.ecbEncBlocks(sendSet + low, up - low, randomLocations);
 		    		for (auto i = 0; i < w; ++i) {
 		    			for (auto j = low; j < up; ++j) {
 		    				memcpy(transLocations[i] + j * locationInBytes, (u8*)(randomLocations + (j - low)) + i * locationInBytes, locationInBytes);
@@ -158,7 +160,7 @@ namespace osuCrypto
 		    		for (auto j = 0; j < mSenderSize; ++j) {
 		    			auto location = ((*(u32*)(transLocations[i] + j * locationInBytes)) & shift) % height;
 		    			transHashInputs[i + wLeft][j >> 3] |= (u8)((bool)(matrixC[i][location >> 3] & (1 << (location & 7)))) << (j & 7);
-		    		}		
+		    		}
 		    	}
 		    }
 

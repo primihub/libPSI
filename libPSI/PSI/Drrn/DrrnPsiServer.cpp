@@ -3,11 +3,11 @@
 #ifdef ENABLE_DRRN_PSI
 
 #include "DrrnPsiServer.h"
-#include <libOTe/TwoChooseOne/IknpOtExtReceiver.h>
-#include <libPSI/PIR/BgiPirServer.h>
-#include <libPSI/Tools/SimpleIndex.h>
+#include "libOTe/TwoChooseOne/IknpOtExtReceiver.h"
+#include "libPSI/PIR/BgiPirServer.h"
+#include "libPSI/Tools/SimpleIndex.h"
 
-#include <cryptoTools/Common/Timer.h>
+#include "cryptoTools/Common/Timer.h"
 #include <algorithm>
 namespace osuCrypto
 {
@@ -259,7 +259,7 @@ namespace osuCrypto
                     }
 
 
-                    // for this big block, 
+                    // for this big block,
 
                     auto shareIter = output.data();
 
@@ -355,11 +355,11 @@ namespace osuCrypto
         for (u64 i = 0; i < bins.size(); ++i)
         {
             bins[i].init(
-                static_cast<u32>(mBinSize), 
-                static_cast<u32>(kDepth), 
-                static_cast<u32>(groupSize), 
-                static_cast<u32>(i), 
-                static_cast<u32>(mBigBlockSize), 
+                static_cast<u32>(mBinSize),
+                static_cast<u32>(kDepth),
+                static_cast<u32>(groupSize),
+                static_cast<u32>(i),
+                static_cast<u32>(mBigBlockSize),
                 static_cast<u32>(mServerId));
 
             bins[i].asyncRecv(clientChl);

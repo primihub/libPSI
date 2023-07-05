@@ -6,7 +6,7 @@
 #include "cryptoTools/Crypto/Commit.h"
 #include "cryptoTools/Common/Log.h"
 #include "cryptoTools/Common/Timer.h"
-#include <libOTe/Base/BaseOT.h>
+#include "libOTe/Base/BaseOT.h"
 #include <unordered_map>
 #include "libOTe/TwoChooseOne/IknpOtExtSender.h"
 #include <iomanip>
@@ -39,7 +39,7 @@ namespace osuCrypto
         numThreads = nThread;
         height = std::max(u64(256), u64(mReceiverSize * scale));
         width = getWidthMeetStatSecParam(mSenderSize, mReceiverSize, height);
-        
+
         mPrng.SetSeed(seed);
         block myHashSeeds;
         myHashSeeds = mPrng.get<block>();
@@ -61,6 +61,7 @@ namespace osuCrypto
     }
 
     void Cm20PsiReceiver::randomizeInputs(block* recvSet, span<block> &inputs) {
+#ifdef ENABLE_SSE
         auto go = [&](u64 start, u64 end) {
             AES commonAes;
             commonAes.setKey(commonSeed);
@@ -103,6 +104,7 @@ namespace osuCrypto
         for (u64 i = 0; i < numThreads; i++) {
             threads[i].join();
         }
+#endif  //  ENABLE_SSE
     }
 
     void Cm20PsiReceiver::computeAndSendMatrixAndComputeHashKey(block* recvSet, std::vector<std::array<block, 2>> &otMessages, u8** transHashInputs, span<Channel> chls) {
@@ -136,7 +138,7 @@ namespace osuCrypto
                 //////////// Compute random locations (transposed) ////////////////
                 for (auto low = 0; low < mReceiverSize; low += bucket1) {
                     auto up = low + bucket1 < mReceiverSize ? low + bucket1 : mReceiverSize;
-                    commonAes.ecbEncBlocks(recvSet + low, up - low, randomLocations); 
+                    commonAes.ecbEncBlocks(recvSet + low, up - low, randomLocations);
                     for (auto i = 0; i < w; ++i) {
                         for (auto j = low; j < up; ++j) {
                             memcpy(transLocations[i] + j * locationInBytes, (u8*)(randomLocations + (j - low)) + i * locationInBytes, locationInBytes);
@@ -171,7 +173,7 @@ namespace osuCrypto
                     for (auto j = 0; j < mReceiverSize; ++j) {
                         auto location = ((*(u32*)(transLocations[i] + j * locationInBytes)) & shift) % height;
                         transHashInputs[i + wLeft][j >> 3] |= (u8)((bool)(matrixA[i][location >> 3] & (1 << (location & 7)))) << (j & 7);
-                    }		
+                    }
                 }
             }
             for (auto i = 0; i < widthBucket1; ++i) {
@@ -257,7 +259,7 @@ namespace osuCrypto
                 for (auto idx = 0; idx < up - low; ++idx) {
                     memcpy(hashOutput, recvBuff + idx * hashLengthInBytes, hashLengthInBytes);
                     u64 mapIdx = *(u64*)(hashOutput);
-                    
+
                     for (u64 hashIndex = 0; hashIndex < numThreads; hashIndex++) {
                         auto found = allHashes[hashIndex].find(mapIdx);
                         if (found == allHashes[hashIndex].end()) continue;

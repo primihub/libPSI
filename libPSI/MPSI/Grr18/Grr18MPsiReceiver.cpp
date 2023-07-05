@@ -6,19 +6,19 @@
 #include <unordered_map>
 #include <random>
 
-#include <cryptoTools/Crypto/PRNG.h>
-#include <cryptoTools/Crypto/Commit.h>
+#include "cryptoTools/Crypto/PRNG.h"
+#include "cryptoTools/Crypto/Commit.h"
 
-#include <libPSI/Tools/SimpleHasher.h>
-#include <cryptoTools/Common/Log.h>
-#include <cryptoTools/Common/Timer.h>
-#include <libOTe/Base/naor-pinkas.h>
+#include "libPSI/Tools/SimpleHasher.h"
+#include "cryptoTools/Common/Log.h"
+#include "cryptoTools/Common/Timer.h"
+#include "libOTe/Base/naor-pinkas.h"
 
 #include "libOTe/TwoChooseOne/KosOtExtReceiver.h"
 #include "libOTe/TwoChooseOne/KosOtExtSender.h"
 
-#include <libPSI/MPSI/Rr17/Rr17MPsiDefines.h>
-#include <libPSI/Tools/CuckooHasher.h>
+#include "libPSI/MPSI/Rr17/Rr17MPsiDefines.h"
+#include "libPSI/Tools/CuckooHasher.h"
 #include "Grr18Common.h"
 #include <sparsehash/dense_hash_map>
 
@@ -170,7 +170,7 @@ namespace osuCrypto
             std::vector<block> kcoSendBase(baseOtCount);
             KosOtExtReceiver kos;
             kos.setBaseOts(kosRecvBase, mPrng, chl0);
-            kos.receive(recvChoice, kcoSendBase, prng, chl0); 
+            kos.receive(recvChoice, kcoSendBase, prng, chl0);
 
             // now set these ~800 OTs as the base of our N choose 1 OTs.
             otSend.setBaseOts(kcoSendBase, recvChoice, chl0);

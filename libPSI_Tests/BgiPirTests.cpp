@@ -1,11 +1,11 @@
 #include "BgiPirTests.h"
 #include "libPSI/PIR/BgiPirClient.h"
 #include "libPSI/PIR/BgiPirServer.h"
-#include <cryptoTools/Network/IOService.h>
-#include <cryptoTools/Network/Endpoint.h>
-#include <cryptoTools/Crypto/PRNG.h>
-#include <cryptoTools/Common/BitVector.h>
-#include <cryptoTools/Common/TestCollection.h>
+#include "cryptoTools/Network/IOService.h"
+#include "cryptoTools/Network/Endpoint.h"
+#include "cryptoTools/Crypto/PRNG.h"
+#include "cryptoTools/Common/BitVector.h"
+#include "cryptoTools/Common/TestCollection.h"
 
 using namespace osuCrypto;
 

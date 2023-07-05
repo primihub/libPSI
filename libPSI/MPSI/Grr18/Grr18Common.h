@@ -2,9 +2,9 @@
 #include "libPSI/config.h"
 #ifdef ENABLE_GRR_PSI
 
-#include <cryptoTools/Common/Defines.h>
+#include "cryptoTools/Common/Defines.h"
 #include <vector>
-#include <cryptoTools/Crypto/PRNG.h>
+#include "cryptoTools/Crypto/PRNG.h"
 #include "libPSI/Tools/SimpleHasher.h"
 
 namespace osuCrypto

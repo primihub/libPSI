@@ -7,10 +7,8 @@
 //#include <boost/math/special_functions/binomial.hpp>
 //#include <boost/multiprecision/cpp_bin_float.hpp>
 
-namespace osuCrypto
-{
-
-
+namespace osuCrypto {
+#ifdef ENABLE_SSE
     void BalancedIndex::print(span<block> items)
     {
 		std::cout << "numIters=" << numIters << std::endl;
@@ -29,7 +27,7 @@ namespace osuCrypto
 
 				}
 			}
-			
+
             std::cout << std::endl;
         }
 
@@ -94,7 +92,7 @@ namespace osuCrypto
 
 				mBins[b2].cnt++;
 			}
-		
+
 		}
 
 
@@ -104,7 +102,7 @@ namespace osuCrypto
 			for (auto it = mBins[idxBin].values.begin(); it != mBins[idxBin].values.end(); ++it)//for each bin, list all alter light bins
 			{
 				if (mBins[it->first].cnt < mMaxBinSize)
-					mBins[idxBin].lightBins.emplace_back(it->first); 
+					mBins[idxBin].lightBins.emplace_back(it->first);
 			}
 
 			if (mBins[idxBin].cnt > mMaxBinSize)
@@ -122,7 +120,7 @@ namespace osuCrypto
 
 
 			u64 b1 = heavyBins[rand() % heavyBins.size()]; //choose random bin that is heavy
-		
+
 			//std::cout << mBins[b1].cnt << "\t";
 
 
@@ -152,7 +150,7 @@ namespace osuCrypto
 						curSubBin->second.erase(curSubBin->second.begin() + idxBalanced); //remove that item from b1
 						mBins[b1].cnt--;
 
-						if (mBins[b1].cnt < mMaxBinSize) //b1 may no longer a heavy bin 
+						if (mBins[b1].cnt < mMaxBinSize) //b1 may no longer a heavy bin
 						{
 							auto it = std::find(heavyBins.begin(), heavyBins.end(), b1);
 							heavyBins.erase(it);
@@ -201,7 +199,7 @@ namespace osuCrypto
 						mBins[idxBin].blks.push_back(items[it->second[idx].mIdx]);
 					else
 						mBins[idxBin].blks.push_back(items[it->second[idx].mIdx]^OneBlock);
-				
+
 					mBins[idxBin].idxs.push_back(it->second[idx].mIdx);
 					mBins[idxBin].hashIdxs.push_back((u8)it->second[idx].mHashIdx);
 
@@ -209,7 +207,7 @@ namespace osuCrypto
 			}
 
 		}
-		
-}
 
+}
+#endif  // ENABLE_SSE
 }

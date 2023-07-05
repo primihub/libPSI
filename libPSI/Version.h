@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cryptoTools/Common/Version.h>
-#include <libOTe/config.h>
+#include "cryptoTools/Common/Version.h"
+#include "libOTe/config.h"
 
 static_assert(CRYPTO_TOOLS_VERSION >= 10500, "please update libOTe and cryptoTools.");
 static_assert(LIBOTE_VERSION >= 10000, "please update libOTe and cryptoTools.");

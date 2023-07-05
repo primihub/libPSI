@@ -1,14 +1,13 @@
 #include "libPSI/config.h"
 #ifdef ENABLE_DRRN_PSI
 #include "BgiPirServer.h"
-#include <cryptoTools/Crypto/PRNG.h>
-#include <cryptoTools/Common/Matrix.h>
-#include <libPSI/PIR/BgiPirClient.h>
-#include <libOTe/Tools/Tools.h>
+#include "cryptoTools/Crypto/PRNG.h"
+#include "cryptoTools/Common/Matrix.h"
+#include "libPSI/PIR/BgiPirClient.h"
+#include "libOTe/Tools/Tools.h"
 
-namespace osuCrypto
-{
-
+namespace osuCrypto {
+#ifdef ENABLE_SSE
 	static AES aes0(toBlock(u64(0)));
 	static AES aes1(toBlock(1));
 	static const block notThreeBlock = toBlock(~0, ~3);
@@ -1354,5 +1353,6 @@ namespace osuCrypto
 		}
 		return ret;
 	}
+#endif   // ENABLE_SSE
 }
 #endif

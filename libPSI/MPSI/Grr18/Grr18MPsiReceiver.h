@@ -5,13 +5,13 @@
 static_assert(0, "ENABLE_OOS must be defined in libOTe");
 #endif
 
-#include <cryptoTools/Common/Defines.h>
-#include <cryptoTools/Common/Timer.h>
-#include <cryptoTools/Network/Channel.h>
+#include "cryptoTools/Common/Defines.h"
+#include "cryptoTools/Common/Timer.h"
+#include "cryptoTools/Network/Channel.h"
 
 #include "libOTe/NChooseOne/Oos/OosNcoOtReceiver.h"
 #include "libOTe/NChooseOne/Oos/OosNcoOtSender.h"
-#include <libPSI/Tools/SimpleHasher.h>
+#include "libPSI/Tools/SimpleHasher.h"
 
 namespace osuCrypto
 {
@@ -21,7 +21,7 @@ namespace osuCrypto
     public:
         Grr18MPsiReceiver();
         ~Grr18MPsiReceiver();
-        
+
         //static const u64 CodeWordSize = 7;
         //static const u64 hasherStepSize;
 

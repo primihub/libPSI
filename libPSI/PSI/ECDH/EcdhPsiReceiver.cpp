@@ -9,7 +9,7 @@ static_assert(0, "ENABLE_RELIC must be defined in libOTe");
 #include "cryptoTools/Crypto/RCurve.h"
 /* #include "cryptoTools/Crypto/Curve.h" */
 #include "cryptoTools/Common/Log.h"
-#include <cryptoTools/Crypto/RandomOracle.h>
+#include "cryptoTools/Crypto/RandomOracle.h"
 #include <unordered_map>
 
 namespace osuCrypto
@@ -98,7 +98,7 @@ namespace osuCrypto
 				//std::cout << "sp  " << point << "  " << toBlock(hashOut) << std::endl;
 
 				yb = (point * b);
-	
+
 #ifdef PRINT
 				if (i == 0)
 					std::cout << "yb[" << i << "] " << yb << std::endl;
@@ -127,7 +127,7 @@ namespace osuCrypto
 			{
 				xa.fromBytes(recvIter); recvIter += xa.sizeBytes();
 				xab = xa*b;
-				
+
 				xab.toBytes(temp.data());
 
                 RandomOracle ro(sizeof(block));
@@ -144,7 +144,7 @@ namespace osuCrypto
 				}
 #endif // PRINT
 
-				
+
                 if (isMultiThreaded)
                 {
                     std::lock_guard<std::mutex> lock(mtx);

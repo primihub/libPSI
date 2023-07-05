@@ -1,6 +1,6 @@
 
 #include "SimpleCuckoo.h"
-#include <cryptoTools/Common/CuckooIndex.h>
+#include "cryptoTools/Common/CuckooIndex.h"
 using namespace osuCrypto;
 #include "cryptoTools/Common/CLP.h"
 #include "cryptoTools/Common/Timer.h"
@@ -206,11 +206,11 @@ void runOne(
 			// at most i.
 			good += count[i];
 
-			// the number of instances with stash size 
+			// the number of instances with stash size
 			// greater than i.
 			u64 bad = curTotal - good;
 
-			// technically this should be log2(curTotal) - log2(bad) but then 
+			// technically this should be log2(curTotal) - log2(bad) but then
 			// the linear growth we see for large secLevel does not continue
 			// as it nears 0. Instead we will allow sec level to go negative.
 			double secLevel = std::log2(std::max(u64(1), good)) - std::log2(std::max(u64(1), bad));
@@ -219,7 +219,7 @@ void runOne(
 				std::cout << "  >" << std::fixed << p << secLevel;
 			}
 			else if (good == 0) {
-				std::cout 
+				std::cout
 					<< "  <" << std::fixed << p << secLevel;
 			}
 			else {
@@ -284,7 +284,7 @@ void runOne(
 	}
 
 }
- 
+
 void perf(u64 setSize, double e, bool both)
 {
 	PRNG prng(ZeroBlock);

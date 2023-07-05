@@ -1,6 +1,6 @@
 #pragma once
-#include <cryptoTools/Common/config.h>
-#include <libOTe/config.h>
+#include "cryptoTools/Common/config.h"
+#include "libOTe/config.h"
 
 #if LIBOTE_VERSION < 10000
 Config ERROR: libOTe is too old.

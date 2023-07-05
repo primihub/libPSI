@@ -2,8 +2,8 @@
 #include "libPSI/config.h"
 #ifdef ENABLE_DRRN_PSI
 
-#include <cryptoTools/Common/Defines.h>
-#include <cryptoTools/Network/Channel.h>
+#include "cryptoTools/Common/Defines.h"
+#include "cryptoTools/Network/Channel.h"
 #include <boost/multiprecision/cpp_int.hpp>
 
 namespace osuCrypto

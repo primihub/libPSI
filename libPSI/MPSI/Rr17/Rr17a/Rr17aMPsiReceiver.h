@@ -2,11 +2,11 @@
 #include "libPSI/config.h"
 #ifdef ENABLE_RR17_PSI
 
-#include <cryptoTools/Common/Defines.h>
-#include <cryptoTools/Common/Timer.h>
-#include <cryptoTools/Network/Channel.h>
-#include <libOTe/NChooseOne/NcoOtExt.h>
-#include <libPSI/Tools/SimpleHasher.h>
+#include "cryptoTools/Common/Defines.h"
+#include "cryptoTools/Common/Timer.h"
+#include "cryptoTools/Network/Channel.h"
+#include "libOTe/NChooseOne/NcoOtExt.h"
+#include "libPSI/Tools/SimpleHasher.h"
 
 namespace osuCrypto
 {
@@ -16,7 +16,7 @@ namespace osuCrypto
     public:
         Rr17aMPsiReceiver();
         ~Rr17aMPsiReceiver();
-        
+
         //static const u64 CodeWordSize = 7;
         //static const u64 hasherStepSize;
 

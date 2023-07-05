@@ -2,10 +2,10 @@
 #include "libPSI/config.h"
 #ifdef ENABLE_GRR_PSI
 
-#include <cryptoTools/Crypto/Commit.h>
-#include <cryptoTools/Common/Log.h>
-#include <cryptoTools/Common/Matrix.h>
-#include <cryptoTools/Common/Timer.h>
+#include "cryptoTools/Crypto/Commit.h"
+#include "cryptoTools/Common/Log.h"
+#include "cryptoTools/Common/Matrix.h"
+#include "cryptoTools/Common/Timer.h"
 #include "libOTe/Base/naor-pinkas.h"
 #include "libOTe/TwoChooseOne/KosOtExtReceiver.h"
 #include "libOTe/TwoChooseOne/KosOtExtSender.h"
@@ -104,7 +104,7 @@ namespace osuCrypto
 
         mBins.init(n, inputBitSize, mHashingSeed, statSecParam, binScaler);
 
-        //std::cout << "max bin size: " << mBins.mMaxBinSize 
+        //std::cout << "max bin size: " << mBins.mMaxBinSize
         //    << " (" << double(mBins.mMaxBinSize) / (double(mBins.mN) / mBins.mBins.size()) <<") " << statSecParam << std::endl;
         //mPsis.resize(mBins.mBinCount);
 
@@ -267,7 +267,7 @@ namespace osuCrypto
                 auto binEnd = (tIdx + 1) * mBins.mBinCount / thrds.size();
 
                 span<u8> theirLoads(theirLoadsMaster.begin() + binStart, theirLoadsMaster.begin() + binEnd);
-               
+
                 u64 theirTotalLoad;
                 auto theirTotalLoadFut = chl.asyncRecv(theirTotalLoad);
                 auto theirLoadsFut = chl.asyncRecv(theirLoads);
@@ -326,7 +326,7 @@ namespace osuCrypto
 
                 std::vector<u8> loads(binEnd - binStart);
                 PRNG binningPrng(sysRandomSeed());
-                auto totalLoad = computeLoads(loads, binningPrng, binStart, mOneSided, mLapPlusBuff, mN, mBins, mEpsBins, mCWThreshold); 
+                auto totalLoad = computeLoads(loads, binningPrng, binStart, mOneSided, mLapPlusBuff, mN, mBins, mEpsBins, mCWThreshold);
                 chl.asyncSend(totalLoad);
                 chl.asyncSend(loads.data(), loads.size());
 
@@ -426,7 +426,7 @@ namespace osuCrypto
                 else
                 {
                     double max = *std::max_element(maxBinSizes.begin(), maxBinSizes.end());
-                    
+
                     std::exponential_distribution<double> exp(mEpsMasks/ max);
                     auto lap = exp(prng) * (-1 + prng.get<bool>() * 2);
 
@@ -503,7 +503,7 @@ namespace osuCrypto
                                 auto dest = masks->data() + maskPermIdx++ * maskSize;
 
                                 // truncate the block size mask down to "maskSize" bytes
-                                // and store it in the maskView matrix at row 
+                                // and store it in the maskView matrix at row
                                 memcpy(
                                     dest,
                                     (u8*)&sendMask,
@@ -526,7 +526,7 @@ namespace osuCrypto
                 // both parties perform a few extra random OTs.
                 otRecv.sendFinalization(chl, prng.get<block>());
                 otSend.recvFinalization(chl);
-                
+
                 // once finalized, the seeds for the proofs are exchanged.
                 otSend.sendChallenge(chl, prng.get<block>());
                 otRecv.recvChallenge(chl);
@@ -579,7 +579,7 @@ namespace osuCrypto
                     {
                         chl.asyncSend(src, step * maskSize);
                     }
-                    
+
                     //for (u64 i = 0; i < step; ++i)
                     //{
                     //    if (memcmp(&src[i * maskSize], temp.data(), maskSize) == 0)

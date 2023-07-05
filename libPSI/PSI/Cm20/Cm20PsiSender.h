@@ -1,9 +1,9 @@
 
 #include "libPSI/config.h"
 
-#include <cryptoTools/Common/Defines.h>
-#include <cryptoTools/Common/Timer.h>
-#include <cryptoTools/Network/Channel.h>
+#include "cryptoTools/Common/Defines.h"
+#include "cryptoTools/Common/Timer.h"
+#include "cryptoTools/Network/Channel.h"
 #include "libOTe/TwoChooseOne/OTExtInterface.h"
 #include "cryptoTools/Crypto/PRNG.h"
 #include "utils.h"
@@ -23,7 +23,7 @@ namespace osuCrypto
 		u64 height, width;
 
 		block commonSeed;
-		PRNG mPrng; 
+		PRNG mPrng;
 
 		void init(u64 senderSize, u64 receiverSize, double scale, u64 nThread, u64 statSecParam, span<Channel> chls, block seed);
 		void init(u64 senderSize, u64 receiverSize, double scale, u64 statSecParam, Channel & chl0, block seed);

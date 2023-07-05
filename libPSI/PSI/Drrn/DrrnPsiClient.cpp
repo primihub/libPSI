@@ -4,7 +4,7 @@
 
 #include "DrrnPsiClient.h"
 #include <unordered_map>
-#include <libPSI/PIR/BgiPirClient.h>
+#include "libPSI/PIR/BgiPirClient.h"
 
 namespace osuCrypto
 {
@@ -169,8 +169,8 @@ namespace osuCrypto
                 //if (itemIdx == 0)
                 //    ostreamLock(std::cout)
                 //    << "item[" << i << "]    bin " << bIdx
-                //    << " block " << bigBlockIdx 
-                //    << " offset " << bigBlockoffset 
+                //    << " block " << bigBlockIdx
+                //    << " offset " << bigBlockoffset
                 //    << " psi " << *shareIter << std::endl;
 
                 // This will be used to map itemed items in the intersection back to their input item

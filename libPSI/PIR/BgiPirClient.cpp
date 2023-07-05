@@ -1,8 +1,8 @@
 #include "libPSI/config.h"
 #ifdef ENABLE_DRRN_PSI
 #include "BgiPirClient.h"
-#include <cryptoTools/Crypto/PRNG.h>
-#include <cryptoTools/Common/BitVector.h>
+#include "cryptoTools/Crypto/PRNG.h"
+#include "cryptoTools/Common/BitVector.h"
 namespace osuCrypto
 {
     std::string ss(block b)

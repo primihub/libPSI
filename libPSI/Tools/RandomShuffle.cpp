@@ -1,10 +1,11 @@
 #include "RandomShuffle.h"
 #include <random>
 #include <algorithm>
-#include<future>
-#include <cryptoTools/Common/Timer.h>
-namespace osuCrypto
-{
+#include <future>
+#include "cryptoTools/Common/Timer.h"
+
+namespace osuCrypto {
+#ifdef ENABLE_SSE
     RandomShuffle::RandomShuffle(u64 numTHreads)
     {
     }
@@ -46,7 +47,7 @@ namespace osuCrypto
             block mask = _mm_set_epi8(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
             std::array<block, 8> expended;
             auto bytes = (u8*)expended.data();
-        
+
             PRNG prng2( prng.get<block>(), 256);
             auto low = src.begin();
             auto mid = src.begin() + src.size() / 2;
@@ -94,4 +95,5 @@ namespace osuCrypto
         }
 
     }
+#endif  // ENABLE_SSE
 }

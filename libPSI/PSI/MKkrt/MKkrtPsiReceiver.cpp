@@ -8,7 +8,7 @@
 #include "cryptoTools/Common/Log.h"
 #include "cryptoTools/Common/Timer.h"
 #include "libPSI/Tools/SimpleHasher.h"
-#include <libOTe/Base/BaseOT.h>
+#include "libOTe/Base/BaseOT.h"
 #include <unordered_map>
 #include "libOTe/TwoChooseOne/IknpOtExtSender.h"
 #include "libOTe/Tools/Tools.h"
@@ -234,7 +234,7 @@ namespace osuCrypto
                 {
                     auto currentStepSize = std::min(stepSize, binEnd - stepIdx);
                     auto stepEnd = stepIdx + currentStepSize;
-                    init_ot(currentStepSize, prngs[pid], chls[pid], mOtRecvs[pid]);   
+                    init_ot(currentStepSize, prngs[pid], chls[pid], mOtRecvs[pid]);
                     for (u64 bIdx = stepIdx; bIdx < stepEnd; bIdx++)
                     {
                         auto& bin = mIndex.mBins[bIdx];

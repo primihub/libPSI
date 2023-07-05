@@ -7,7 +7,7 @@
 //#include <mutex>
 #include <atomic>
 
-#include <cryptoTools/Common/CuckooIndex.h>
+#include "cryptoTools/Common/CuckooIndex.h"
 
 #define THREAD_SAFE_CUCKOO_HASHER
 

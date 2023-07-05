@@ -3,9 +3,9 @@
 
 #include "Rr17aMPsiSender.h"
 
-#include <cryptoTools/Crypto/Commit.h>
-#include <cryptoTools/Common/Log.h>
-#include <cryptoTools/Common/Timer.h>
+#include "cryptoTools/Crypto/Commit.h"
+#include "cryptoTools/Common/Log.h"
+#include "cryptoTools/Common/Timer.h"
 #include "libOTe/Base/BaseOT.h"
 #include "libOTe/TwoChooseOne/KosOtExtReceiver.h"
 #include "libOTe/TwoChooseOne/KosOtExtSender.h"
@@ -100,7 +100,7 @@ namespace osuCrypto
 
 
         mBins.init(n, inputBitSize, mHashingSeed, statSecParam, binScaler);
-        
+
         //std::cout << "max bin size: " << mBins.mMaxBinSize << " #masks " << mN * mBins.mMaxBinSize<< std::endl;
         //mPsis.resize(mBins.mBinCount);
 
