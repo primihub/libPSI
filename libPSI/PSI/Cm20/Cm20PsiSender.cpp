@@ -122,7 +122,7 @@ namespace osuCrypto
             u8* matrixC[widthBucket1];
             u8* recvMatrix[widthBucket1];
             std::future<void> futs[widthBucket1];
-		    for (auto i = 0; i < widthBucket1; ++i) {
+		    for (decltype(widthBucket1) i = 0; i < widthBucket1; ++i) {
 		    	transLocations[i] = new u8[mSenderSize * locationInBytes + sizeof(u32)];
 		    	matrixC[i] = new u8[heightInBytes];
                 recvMatrix[i] = new u8[heightInBytes];
@@ -131,40 +131,40 @@ namespace osuCrypto
             for (auto wLeft = start; wLeft < end; wLeft += widthBucket1) {
 		    	auto wRight = wLeft + widthBucket1 < end ? wLeft + widthBucket1 : end;
 		    	auto w = wRight - wLeft;
-                for (auto i = 0; i < w; ++i) {
+                for (decltype(w) i = 0; i < w; ++i) {
 		    		futs[i] = chls[pid].asyncRecv(recvMatrix[i], heightInBytes);
 		    	}
 		    	//////////// Compute random locations (transposed) ////////////////
-		    	for (auto low = 0; low < mSenderSize; low += bucket1) {
+		    	for (u64 low = 0; low < mSenderSize; low += bucket1) {
 		    		auto up = low + bucket1 < mSenderSize ? low + bucket1 : mSenderSize;
 		    		commonAes.ecbEncBlocks(sendSet + low, up - low, randomLocations);
-		    		for (auto i = 0; i < w; ++i) {
-		    			for (auto j = low; j < up; ++j) {
+		    		for (decltype(w) i = 0; i < w; ++i) {
+		    			for (u64 j = low; j < up; ++j) {
 		    				memcpy(transLocations[i] + j * locationInBytes, (u8*)(randomLocations + (j - low)) + i * locationInBytes, locationInBytes);
 		    			}
 		    		}
 		    	}
 		    	//////////////// Extend OTs and compute matrix C ///////////////////
-		    	for (auto i = 0; i < w; ++i) {
+		    	for (decltype(w) i = 0; i < w; ++i) {
 		    		PRNG prng(otMessages[i + wLeft]);
 		    		prng.get(matrixC[i], heightInBytes);
                     futs[i].get();
 		    		if (choices[i + wLeft]) {
-		    			for (auto j = 0; j < heightInBytes; ++j) {
+		    			for (u64 j = 0; j < heightInBytes; ++j) {
 		    				matrixC[i][j] ^= recvMatrix[i][j];
 		    			}
 		    		}
 		    	}
 		    	///////////////// Compute hash inputs (transposed) /////////////////////
-		    	for (auto i = 0; i < w; ++i) {
-		    		for (auto j = 0; j < mSenderSize; ++j) {
+		    	for (decltype(w) i = 0; i < w; ++i) {
+		    		for (u64 j = 0; j < mSenderSize; ++j) {
 		    			auto location = ((*(u32*)(transLocations[i] + j * locationInBytes)) & shift) % height;
 		    			transHashInputs[i + wLeft][j >> 3] |= (u8)((bool)(matrixC[i][location >> 3] & (1 << (location & 7)))) << (j & 7);
 		    		}
 		    	}
 		    }
 
-            for (auto i = 0; i < widthBucket1; ++i) {
+            for (decltype(widthBucket1) i = 0; i < widthBucket1; ++i) {
                 delete[] transLocations[i];
                 delete[] matrixC[i];
                 delete[] recvMatrix[i];
@@ -191,7 +191,7 @@ namespace osuCrypto
 
             u8 hashOutput[sizeof(block)];
             u8* hashInputs[bucket2];
-            for (auto i = 0; i < bucket2; ++i) {
+            for (u64 i = 0; i < bucket2; ++i) {
                 hashInputs[i] = new u8[widthInBytes];
             }
             u8* sentBuff = new u8[bucket2 * hashLengthInBytes];
@@ -200,15 +200,15 @@ namespace osuCrypto
             bool futSet = false;
             for (auto low = start; low < end; low += bucket2) {
                 auto up = low + bucket2 < end ? low + bucket2 : end;
-                for (auto j = low; j < up; ++j) {
+                for (u64 j = low; j < up; ++j) {
                     memset(hashInputs[j - low], 0, widthInBytes);
                 }
-                for (auto i = 0; i < width; ++i) {
-                    for (auto j = low; j < up; ++j) {
+                for (decltype(width) i = 0; i < width; ++i) {
+                    for (decltype(up) j = low; j < up; ++j) {
                         hashInputs[j - low][i >> 3] |= (u8)((bool)(transHashInputs[i][j >> 3] & (1 << (j & 7)))) << (i & 7);
                     }
                 }
-                for (auto j = low; j < up; ++j) {
+                for (decltype(low) j = low; j < up; ++j) {
                     H.Reset();
                     H.Update(hashInputs[j - low], widthInBytes);
                     H.Final(hashOutput);
@@ -222,7 +222,7 @@ namespace osuCrypto
             if (futSet) fut.get();
             delete[] sentBuff;
             delete[] futBuff;
-            for (auto i = 0; i < bucket2; ++i) {
+            for (u64 i = 0; i < bucket2; ++i) {
                 delete[] hashInputs[i];
             }
         };
@@ -258,7 +258,7 @@ namespace osuCrypto
 
         u64 senderSizeInBytes = (mSenderSize + 7) / 8;
         u8* transHashInputs[width];
-		for (auto i = 0; i < width; ++i) {
+		for (decltype(width) i = 0; i < width; ++i) {
 			transHashInputs[i] = new u8[senderSizeInBytes];
 			memset(transHashInputs[i], 0, senderSizeInBytes);
 		}
@@ -267,7 +267,7 @@ namespace osuCrypto
         setTimePoint("cm20.Send.matrix.end");
 
         computeInputsHashAndSend(transHashInputs, chls);
-        for (auto i = 0; i < width; ++i) {
+        for (decltype(width) i = 0; i < width; ++i) {
 			delete[] transHashInputs[i];
 		}
         setTimePoint("cm20.Send.hash.end");

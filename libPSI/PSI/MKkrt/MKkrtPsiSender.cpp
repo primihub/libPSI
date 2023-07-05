@@ -337,7 +337,7 @@ namespace osuCrypto
         u64 thrdHashSize = std::ceil(1.0 * items.size() / threadNum);
         for (u64 pid = 0; pid < threadNum; pid++) {
             auto hashStart = pid * thrdHashSize;
-            auto hashEnd = std::min(items.size(), hashStart + thrdHashSize);
+            auto hashEnd = std::min(static_cast<u64>(items.size()), static_cast<u64>(hashStart + thrdHashSize));
             hashThrd[pid] = std::thread([&items, &binIdxs, hashingSeed, numBins, &prng, &myMaskBuff, &perm, hashStart, hashEnd]() {
                 hashItems2(items, binIdxs, hashingSeed, numBins, prng, myMaskBuff, perm, hashStart, hashEnd);
             });
@@ -349,12 +349,12 @@ namespace osuCrypto
         std::mutex mtx_syn;
         for (u64 pid = 0; pid < threadNum; pid++) {
             auto hashStart = pid * thrdHashSize;
-            auto hashEnd = std::min(items.size(), hashStart + thrdHashSize);
+            auto hashEnd = std::min(static_cast<u64>(items.size()), static_cast<u64>(hashStart + thrdHashSize));
             hashThrd[pid] = std::thread([&items, &mtx_syn, numHashes, &binIdxs, &binIndex, hashingSeed, numBins, &prng, &myMaskBuff, &perm, hashStart, hashEnd]() {
                 for (u64 i = hashStart; i < hashEnd; i++) {
                     for (u64 j = 0; j < numHashes; j++) {
                         auto& bid = binIdxs(i, j);
-                        if (bid == -1) {
+                        if (bid == static_cast<u64>(-1)) {
                             for (;;) {
                                 bid = prng.get<u64>() % numBins;
                                 if (bid != binIdxs(i, (j+1)%numHashes) &&
@@ -378,12 +378,12 @@ namespace osuCrypto
 
         for (u64 pid = 0; pid < threadNum; pid++) {
             auto hashStart = pid * thrdHashSize;
-            auto hashEnd = std::min(items.size(), hashStart + thrdHashSize);
+            auto hashEnd = std::min(static_cast<u64>(items.size()), static_cast<u64>(hashStart + thrdHashSize));
             hashThrd[pid] = std::thread([&items, &mtx_syn, &binIdx, &binHash, numHashes, &binIdxs, &binIndex, hashingSeed, numBins, &prng, &myMaskBuff, &perm, hashStart, hashEnd]() {
                 for (u64 i = hashStart; i < hashEnd; i++) {
                     for (u64 j = 0; j < numHashes; j++) {
                         auto bid = binIdxs(i, j);
-                        if (bid == -1) std::cout << "error" << std::endl;
+                        if (bid == static_cast<u64>(-1)) std::cout << "error" << std::endl;
                         auto tIndex = binIndex[bid].fetch_add(-1, std::memory_order::memory_order_release);
                         binIdx[tIndex - 1] = i;
                         binHash[tIndex - 1] = j;
@@ -461,7 +461,7 @@ namespace osuCrypto
 
                     u64 otCorStride = mOtSenders[pid].mCorrectionVals.stride();
                     auto dest = mOtSenders[pid].mCorrectionVals.begin() + (mOtSenders[pid].mCorrectionIdx * otCorStride);
-                    for (int i = 0; i < currentStepSize; i++) {
+                    for (decltype(currentStepSize) i = 0; i < currentStepSize; i++) {
                         memcpy((u8*)&*dest, buffer + i * corByte, corByte);
                         dest += otCorStride;
                     }

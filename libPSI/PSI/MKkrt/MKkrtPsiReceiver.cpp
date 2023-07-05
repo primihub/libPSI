@@ -186,7 +186,7 @@ namespace osuCrypto
         u64 thrdHashSize = std::ceil(1.0 * inputs.size() / chls.size());
         for (u64 pid = 0; pid < chls.size(); pid++) {
             auto hashStart = pid * thrdHashSize;
-            auto hashEnd = std::min(inputs.size(), hashStart + thrdHashSize);
+            auto hashEnd = std::min(static_cast<u64>(inputs.size()), static_cast<u64>(hashStart + thrdHashSize));
             hashThrd[pid] = std::thread([&prehash, hashStart, hashEnd, &inputs, mHashingSeed]() {
                 AES hasher(mHashingSeed);
                 hasher.ecbEncBlocks(inputs.data() + hashStart, hashEnd - hashStart, prehash.data() + hashStart);
@@ -228,11 +228,11 @@ namespace osuCrypto
         u64 thrdBinSize = std::ceil(1.0 * mIndex.mBins.size() / chls.size());
         for (u64 pid = 0; pid < chls.size(); pid++) {
             auto binStart = pid * thrdBinSize;
-            auto binEnd = std::min(mIndex.mBins.size(), binStart + thrdBinSize);
+            auto binEnd = std::min(static_cast<u64>(mIndex.mBins.size()), static_cast<u64>(binStart + thrdBinSize));
             oprfThrd[pid] = std::thread([pid, binStart, maskByteSize, binEnd, &chls, &mtx_syn, this, &localMasks, &inputs]() {
                 for (u64 stepIdx = binStart; stepIdx < binEnd; stepIdx += stepSize)
                 {
-                    auto currentStepSize = std::min(stepSize, binEnd - stepIdx);
+                    auto currentStepSize = std::min(static_cast<u64>(stepSize), static_cast<u64>(binEnd - stepIdx));
                     auto stepEnd = stepIdx + currentStepSize;
                     init_ot(currentStepSize, prngs[pid], chls[pid], mOtRecvs[pid]);
                     for (u64 bIdx = stepIdx; bIdx < stepEnd; bIdx++)

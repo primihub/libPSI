@@ -421,7 +421,7 @@ namespace osuCrypto
 
                     // if the bin index is less than r, then we have received
                     // the correction and can encode it
-                    if (bIdx != -1 && bIdx < r)
+                    if (bIdx != static_cast<u64>(-1) && bIdx < r)
                     {
                         // write the encoding into myMaskBuff at position  i, h
                         auto encoding = myMaskBuff.data() + (i * mParams.mNumHashes + h) * myMaskBuff.stride();

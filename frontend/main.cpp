@@ -339,37 +339,37 @@ void pingTest(CLP& cmd)
 }
 
 
-void shuffle()
-{
+// void shuffle()
+// {
 
-    u64 n = 1ull << 22;
-    std::vector<u64> vals(n);
-    PRNG prng(ZeroBlock, 256);
+//     u64 n = 1ull << 22;
+//     std::vector<u64> vals(n);
+//     PRNG prng(ZeroBlock, 256);
 
-    RandomShuffle ss;
-    Timer timer;
-    timer.setTimePoint("s");
-    for (u64 jj = 0; jj < 10; ++jj)
-    {
+//     RandomShuffle ss;
+//     Timer timer;
+//     timer.setTimePoint("s");
+//     for (u64 jj = 0; jj < 10; ++jj)
+//     {
 
-        ss.shuffle(vals, prng);
+//         ss.shuffle(vals, prng);
 
-    }
-    timer.setTimePoint("s");
-    std::cout << timer << std::endl;
-    timer.reset();
-    timer.setTimePoint("s");
+//     }
+//     timer.setTimePoint("s");
+//     std::cout << timer << std::endl;
+//     timer.reset();
+//     timer.setTimePoint("s");
 
-    for (u64 jj = 0; jj < 10; ++jj)
-    {
-        ss.mergeShuffle(vals, prng);
-    }
-    timer.setTimePoint("m");
-    std::cout << timer << std::endl;
-    timer.reset();
+//     for (u64 jj = 0; jj < 10; ++jj)
+//     {
+//         ss.mergeShuffle(vals, prng);
+//     }
+//     timer.setTimePoint("m");
+//     std::cout << timer << std::endl;
+//     timer.reset();
 
 
-}
+// }
 
 void BallsAndBins(CLP& cmd)
 {
