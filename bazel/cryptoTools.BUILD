@@ -112,7 +112,7 @@ cc_library(
     linkopts = ["-pthread"],
     linkstatic = True,
     deps = [
-                ":cryptoTools",
+                ":libcryptoTools",
                 "@toolkit_relic//:relic",
         ],
 )
@@ -130,7 +130,7 @@ cc_library(
     linkopts = ["-pthread -lstdc++"],
     linkstatic = True,
     deps = [
-                ":cryptoTools",
+                ":libcryptoTools",
                 ":tests_cryptoTools",
                 "@toolkit_relic//:relic",
         ],
@@ -147,7 +147,7 @@ cc_binary(
     linkstatic = False,
     deps = [
                 ":lib_frontend_cryptoTools",
-                ":cryptoTools",
+                ":libcryptoTools",
                 ":tests_cryptoTools",
                 "@toolkit_relic//:relic",
         ],

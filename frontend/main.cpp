@@ -38,7 +38,7 @@ using namespace osuCrypto;
 #include "libPSI/PIR/BgiPirServer.h"
 #include "cryptoTools/Crypto/RandomOracle.h"
 
-#include "cuckoo/cuckooTests.h"
+// #include "cuckoo/cuckooTests.h"
 #include "cryptoTools/Common/CLP.h"
 #include "cryptoTools/Common/CuckooIndex.h"
 #include "libPSI/Tools/SimpleIndex.h"
@@ -82,11 +82,11 @@ std::function<void(LaunchParams&)> NoOp;
 
 
 
-void Drrn17Send(
-    LaunchParams& params);
+// void Drrn17Send(
+//     LaunchParams& params);
 
-void Drrn17Recv(
-    LaunchParams& params);
+// void Drrn17Recv(
+//     LaunchParams& params);
 
 void banchmarkPIR(
 	std::vector<std::string> tag,
@@ -397,11 +397,11 @@ int main(int argc, char** argv)
 	//return 0;
 
 	// run cuckoo analysis
-	if (cmd.isSet("cuckoo"))
-	{
-		simpleTest(argc, argv);
-		return 0;
-	}
+	// if (cmd.isSet("cuckoo"))
+	// {
+	// 	simpleTest(argc, argv);
+	// 	return 0;
+	// }
 
 	// compute the ping.
 	if (cmd.isSet(pingTag))
@@ -458,7 +458,7 @@ int main(int argc, char** argv)
 		benchmark(grrTags, cmd, grr18Recv, grr18Send);
 		benchmark(dktTags, cmd, DktRecv, DktSend);
 		benchmark(ecdhTags, cmd, EcdhRecv, EcdhSend);
-		banchmarkPIR(drrnTag, cmd, Drrn17Recv, Drrn17Send);
+		// banchmarkPIR(drrnTag, cmd, Drrn17Recv, Drrn17Send);
 	}
 
 
@@ -479,7 +479,7 @@ int main(int argc, char** argv)
 		cmd.isSet(pingTag) == false) ||
 		cmd.isSet(helpTags))
 	{
-		std::cout << Color::Red 
+		std::cout << Color::Red
 			<< "#######################################################\n"
 			<< "#                      - libPSI -                     #\n"
 			<< "#               A library for performing              #\n"
@@ -503,7 +503,7 @@ int main(int argc, char** argv)
 			<< "   -" << kkrtTag[0] << "    : KKRT16  - Hash to Bin & compare style (semi-honest secure, fastest)\n"
 			<< "   -" << mkkrtTag[0] << "   : KKRT16  - Hash to Bin & compare style (semi-honest secure, fastest,multithread)\n"
 			<< "   -" << cm20Tag[0] << "    : CM20  - Multi-Point OPRF & compare style (semi-honest secure, fastest)\n"
-            << "   -" << drrnTag[0] << "  : DRRN17  - Two server PIR style (semi-honest secure)\n" 
+            << "   -" << drrnTag[0] << "  : DRRN17  - Two server PIR style (semi-honest secure)\n"
 			<< std::endl;
 
 		std::cout << Color::Green << "File based PSI Parameters: " << Color::Default

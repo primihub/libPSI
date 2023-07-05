@@ -1,10 +1,14 @@
 package(default_visibility = ["//visibility:public",],)
-
 load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
 
+config_setting(
+  name = "enable_sse",
+  values = {"define": "cpu_arch=x86_64"},
+)
+
 LINK_OPTS = [
-    "-pthread",
-    "-ldl",
+  "-pthread",
+  "-ldl",
 ]
 
 DEFINES = [
@@ -19,73 +23,108 @@ DEFINES = [
   "TEST_LIBP2P",
 ]
 
-C_OPT = [
-    "-O0",
-    "-g",
-    "-Wall",
-    "-ggdb",
-    "-rdynamic",
+ENABLE_SSE_OPT = select({
+  "enable_sse":[
     "-maes",
+    "-msse2",
+    "-msse3",
+    "-msse4.1",
     "-mpclmul",
-    "-Wno-reserved-user-defined-literal",
-]
+  ],
+  "//conditions:default": []
+})
+
+DEFAULT_C_OPT = [
+  "-O0",
+  "-g",
+  "-Wall",
+  "-ggdb",
+  "-rdynamic",
+  "-Wno-reserved-user-defined-literal",
+] + ENABLE_SSE_OPT
 
 ## sparsehash
 cc_library(
-    name = "sparsehash_config",
-    hdrs = ["sparseconfig.h"],
-    include_prefix = "sparsehash/internal",
-    visibility = ["//visibility:public"],
+  name = "sparsehash_config",
+  hdrs = ["sparseconfig.h"],
+  include_prefix = "sparsehash/internal",
+  visibility = ["//visibility:public"],
 )
 
 ## libpsi
 cc_library(
-    name = "libpsi_config",
-    hdrs = ["config.h"],
-    include_prefix = "libPSI",
-    visibility = ["//visibility:public"],
+  name = "libpsi_config",
+  hdrs = ["config.h"],
+  include_prefix = "libPSI",
+  visibility = ["//visibility:public"],
 )
 
 cc_library(
-    name = "libpsi",
-    srcs = glob(
-        [
-            "libPSI/**/*.cpp",
-            "libPSI/**/*.h",
-            #"frontend/**/*.cpp",
-        ],
-
-    ),
-    hdrs = glob([
-        "libPSI/**/*.h",
-        #"frontend/**/*.h",
+  name = "libpsi",
+  srcs = glob([
+    "libPSI/**/*.cpp",
+    "libPSI/**/*.h",
+    #"frontend/**/*.cpp",
     ]),
-    includes = ["libPSI"],
-    visibility = ["//visibility:public"],
-    linkopts = ["-pthread -lstdc++"],
-    copts = ["-I. -std=c++14 -O0 -g -ggdb -rdynamic -maes -msse2 -msse3 -msse4.1 -mpclmul"],
-    strip_include_prefix = "libPSI",
-    # Using an empty include_prefix causes Bazel to emit -I instead of -iquote
-    # options for the include directory, so that #include <gmp.h> works.
-    include_prefix = "libPSI",
-    deps = [
-        ":libpsi_config",
-        "@ladnir_cryptoTools//:libcryptoTools",
-        "@osu_libote//:libOTe",
-        "@github_ntl//:libntl",
-        "@google_sparsehash//:sparsehash",
-    ],
+  hdrs = glob([
+    "libPSI/**/*.h",
+    #"frontend/**/*.h",
+  ]),
+  includes = ["libPSI"],
+  visibility = ["//visibility:public"],
+  linkopts = ["-pthread -lstdc++"],
+  copts = DEFAULT_C_OPT,
+  strip_include_prefix = "libPSI",
+  # Using an empty include_prefix causes Bazel to emit -I instead of -iquote
+  # options for the include directory, so that #include <gmp.h> works.
+  include_prefix = "libPSI",
+  deps = [
+    ":libpsi_config",
+    "@ladnir_cryptoTools//:libcryptoTools",
+    "@osu_libote//:libOTe",
+    "@google_sparsehash//:sparsehash",
+  ],
 )
 
 # test
+cc_library(
+  name = "libpsi_tests",
+  hdrs = glob([
+    "libPSI_Tests/*.h",
+  ]),
+  srcs = glob([
+    "libPSI_Tests/*.cpp",
+  ]),
+  copts = DEFAULT_C_OPT,
+  deps = [
+    ":libpsi",
+  ],
+)
+
+cc_binary(
+  name = "psi_test_main",
+  srcs = glob([
+    #"frontend/cuckoo/*.h",
+    #"frontend/cuckoo/*.cpp",
+    "frontend/*.h",
+    "frontend/*.cpp",
+  ]),
+  deps = [
+    ":libpsi_tests",
+    "@ladnir_cryptoTools//:tests_cryptoTools",
+    "@osu_libote//:libOTe_Tests",
+    "@ladnir_cryptoTools//:libcryptoTools",
+  ],
+)
+
 cc_test(
-    name = "test",
-    copts = C_OPT,
-    defines = DEFINES,
-    linkopts = LINK_OPTS,
-    linkstatic = False,
-    deps = [
-            "@google_sparsehash//:sparsehash",
-            ":libpsi",
-    ],
+  name = "test",
+  copts = DEFAULT_C_OPT,
+  defines = DEFINES,
+  linkopts = LINK_OPTS,
+  linkstatic = False,
+  deps = [
+    "@google_sparsehash//:sparsehash",
+    ":libpsi",
+  ],
 )

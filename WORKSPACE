@@ -83,44 +83,12 @@ new_git_repository(
 
 
 # cryptoTools
-#http_archive(
-#    name = "cryptoTools",
-#    build_file = "//bazel:cryptoTools.BUILD",
-#    #sha256 = "6f021f24136eb177af38af3bf5d53b3592a1fe1e71d1c098318488a85b0afc3a",
-#    strip_prefix = "cryptoTools-2.0",
-#    urls = ["https://github.com/yankaili2006/cryptoTools/archive/refs/tags/v2.0.zip"],
-#)
 
 new_git_repository(
   name = "ladnir_cryptoTools",
   build_file = "//bazel:cryptoTools.BUILD",
   commit = "d52e05e2e803006256ddb66f48a0d51080f4b285",
   remote = "https://gitee.com/primihub/cryptoTools.git",
-  # shallow_since = "1591047380 -0700",
-)
-
-# ntl
-#http_archive(
-#    name = "ntl",
-#    build_file = "//bazel:ntl.BUILD",
-#    #sha256 = "6f021f24136eb177af38af3bf5d53b3592a1fe1e71d1c098318488a85b0afc3a",
-#    strip_prefix = "ntl-main",
-#    urls = ["https://github.com/libntl/ntl/archive/refs/heads/main.zip"],
-#)
-
-#git_repository(
-#    name = "ntl",
-#    # commit = "1e3a69bf2d5cd10c34b74f066054cd335d033d71",
-#    branch = "main",
-#    remote = "https://github.com/yankaili2006/ntl.git",
-#    # shallow_since = "1591047380 -0700",
-#)
-
-new_git_repository(
-  name = "github_ntl",
-  build_file = "//bazel:ntl.BUILD",
-  commit = "6b23216ce6b24dd04446122c2200b6f031621965",
-  remote = "https://gitee.com/primihub/ntl.git",
   # shallow_since = "1591047380 -0700",
 )
 
