@@ -496,6 +496,158 @@ namespace osuCrypto
 
         thrd.join();
     }
+
+
+
+  void KkrtPsiSender::sendInput(std::vector<block>& inputs, Channel& chl) {
+    if (inputs.size() != mSenderSize)
+        throw std::runtime_error("rt error at " LOCATION);
+
+    setTimePoint("kkrt.S Online.online start");
+
+    u64 maskSize = u64(mStatSecParam + std::log2(mSenderSize * mRecverSize) + 7) / 8; //by byte
+    auto numBins = mParams.numBins();
+
+
+    // the buffer that we will write the masks to. There are
+    // mParams.mNumHashes * mSenderSize rows, where the input at index
+    // i will have its mParams.mNumHashes encodings written to locations
+    // { i * mParams.mNumHashes + 0,
+    //   i * mParams.mNumHashes + 1,
+    //   ...
+    //   i * mParams.mNumHashes + mParams.mNumHashes - 1 }
+    Matrix<u8> myMaskBuff(mSenderSize * mParams.mNumHashes, maskSize);
+
+    // we will process data in chucks of this size.
+    u64 stepSize = 1 << 10;
+
+    // set of some inter thread communication objects that will
+    // allow this thread to know when the OT correction values have
+    // been received.
+    std::atomic<u64> recvedIdx(0);
+
+
+    // spin off another thread that will schedule the corrections to be received.
+    // This thread does not actually do any work and could be removed somehow.
+    auto thrd = std::thread([&]() {
+      // while there are more corrections for be received
+      while (recvedIdx < numBins) {
+        // compute the  size of the current step and the end index
+        auto currentStepSize = std::min(stepSize, numBins - recvedIdx);
+        // receive the corrections.
+        mOtSender->recvCorrection(chl, currentStepSize);
+        // notify the other thread that the corrections have arrived
+        recvedIdx.fetch_add(currentStepSize, std::memory_order::memory_order_release);
+      }
+    });
+
+
+    setTimePoint("kkrt.S Online.hashing start");
+
+    // hash the items to bins. Instead of inserting items into bins,
+    // we will just keep track of a map mapping input index to bin indexes
+    //
+    // e.g.   binIdxs[i] -> { h0(input[i]), h1(input[i]), h2(input[i]) }
+    //
+    Matrix<u64> binIdxs(inputs.size(), mParams.mNumHashes);
+    hashItems(inputs, binIdxs, mHashingSeed, numBins, mPrng, myMaskBuff, mPermute);
+
+    setTimePoint("kkrt.S Online.computeBucketMask start");
+
+    // Now we will look over the inputs and try to encode them. Not that not all
+    // of the corrections have beed received. In the case that the current item
+    // is mapped to a bin where we do not have the correction, we will simply
+    // skip this item for now. Once all corrections have been received, we
+    // will make a second pass over the inputs and encode them all.
+
+    // the current input index
+    u64 i = 0;
+
+    // the index of the corrections that have been received in the other thread.
+    u64 r = 0;
+
+    // while not all the corrections have been received, try to encode any that we can
+    while (r != numBins) {
+      // process things in steps
+      for (u64 j = 0; j < stepSize; ++j) {
+        // lets check a random item to see if it can be encoded. If so,
+        // we will write this item's encodings in the myMaskBuff at position i.
+        auto inputIdx = mPermute[i];
+
+        // for each hash function, try to encode the item.
+        for (u64 h = 0; h < mParams.mNumHashes; ++h) {
+          auto& bIdx = binIdxs(inputIdx, h);
+
+          // if the bin index is less than r, then we have received
+          // the correction and can encode it
+          if (bIdx != static_cast<u64>(-1) && bIdx < r) {
+            // write the encoding into myMaskBuff at position  i, h
+            auto encoding = myMaskBuff.data() + (i * mParams.mNumHashes + h) * myMaskBuff.stride();
+            mOtSender->encode(bIdx, &inputs[inputIdx], encoding, myMaskBuff.stride());
+
+            // make this location as already been encoded
+            bIdx = -1;
+          }
+        }
+
+        // wrap around the input looking for items that we can encode
+        i = (i + 1) % inputs.size();
+      }
+
+      // after stepSize attempts to encode items, lets see if more
+      // corrections have arrived.
+      r = recvedIdx.load(std::memory_order::memory_order_acquire);
+    }
+
+
+    setTimePoint("kkrt.S Online.linear start");
+    auto encoding = myMaskBuff.data();
+
+    // OK, all corrections have been received. It is now safe to start sending
+    // masks to the receiver. We will send them in permuted order
+    //     mPermute[0],
+    //     mPermute[1],
+    //        ...
+    //     mPermute[mSenderSize]
+    //
+    // Also note that we can start sending them before all have been
+    // encoded. This will allow us to start communicating data back to the
+    // receiver almost right after all the corrections have been received.
+    for (u64 i = 0; i < inputs.size();) {
+      auto start = i;
+      auto currentStepSize = std::min(stepSize, inputs.size() - i);
+
+      for (u64 j = 0; j < currentStepSize; ++j, ++i) {
+
+        // get the next input that we should encode
+        auto inputIdx = mPermute[i];
+
+        for (u64 h = 0; h < mParams.mNumHashes; ++h) {
+          auto bIdx = binIdxs(inputIdx, h);
+
+          // see if we have already encoded this items
+          if (bIdx != u64(-1))
+          {
+              mOtSender->encode(bIdx, &inputs[inputIdx], encoding, myMaskBuff.stride());
+          }
+          encoding += myMaskBuff.stride();
+        }
+      }
+
+      // send over next currentStepSize * * mParams.mNumHashes masks
+      auto data = myMaskBuff.data() + myMaskBuff.stride() * start * mParams.mNumHashes;
+      auto size = myMaskBuff.stride() * currentStepSize * mParams.mNumHashes;
+      chl.asyncSend(data, size);
+    }
+    setTimePoint("kkrt.S Online.done start");
+
+    // send one byte to make sure that we dont leave this scope before the masks
+    // have all been sent.
+    // TODO: fix this.
+    u8 dummy[1];
+    chl.send(dummy, 1);
+    thrd.join();
+  }
 }
 
 

@@ -34,6 +34,7 @@ namespace osuCrypto
 		void init(u64 senderSize, u64 recverSize, u64 statSecParam, Channel & chl0, NcoOtExtSender& otSender, block seed);
 
 		void sendInput(span<block> inputs, Channel& chl);
+    void sendInput(std::vector<block>& inputs, Channel& chl);
 		void sendInput(span<block> inputs, span<Channel> chls);
 
 

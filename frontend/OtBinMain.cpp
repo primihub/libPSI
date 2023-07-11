@@ -1,5 +1,5 @@
 #include "bloomFilterMain.h"
-#include "cryptoTools/Network/Endpoint.h" 
+#include "cryptoTools/Network/Endpoint.h"
 
 #include "libPSI/MPSI/Rr17/Rr17a/Rr17aMPsiReceiver.h"
 #include "libPSI/MPSI/Rr17/Rr17a/Rr17aMPsiSender.h"
@@ -627,7 +627,7 @@ void mkkrtSend(
                     if (i < senderSize / 2) {
                         memset(&sendSet[i], 0, sizeof(block));
                         ((u64 *)&sendSet[i])[0] = i;
-                    } 
+                    }
                 }
 
                 MKkrtPsiSender sendPSIs;
@@ -695,7 +695,7 @@ void mkkrtRecv(
                     if (i < receiverSize / 2) {
                         memset(&recvSet[i], 0, sizeof(block));
                         ((u64 *)&recvSet[i])[0] = i;
-                    } 
+                    }
                 }
 
                 MKkrtPsiReceiver recvPSIs;
@@ -735,7 +735,7 @@ void mkkrtRecv(
                     std::cout << "intersection size " << recvPSIs.mIntersection.size() << " not match" << receiverSize / 2 << std::endl;
                 }
                 sort(recvPSIs.mIntersection.begin(), recvPSIs.mIntersection.end());
-                int i;
+                size_t i;
                 for (i = 0; i < recvPSIs.mIntersection.size(); i++) {
                     if (recvPSIs.mIntersection[i] != i) {
                         break;
@@ -743,7 +743,7 @@ void mkkrtRecv(
                 }
                 if (i != recvPSIs.mIntersection.size()) {
                     std::cout << "intersection wrong result" << std::endl;
-                } 
+                }
             }
         }
     }
@@ -782,7 +782,7 @@ void cm20Send(
                     if (i < senderSize / 2) {
                         memset(&sendSet[i], 0, sizeof(block));
                         ((u64 *)&sendSet[i])[0] = i;
-                    } 
+                    }
                 }
 
                 Cm20PsiSender sendPSIs;
@@ -846,7 +846,7 @@ void cm20Recv(
                     if (i < receiverSize / 2) {
                         memset(&recvSet[i], 0, sizeof(block));
                         ((u64 *)&recvSet[i])[0] = i;
-                    } 
+                    }
                 }
 
                 Cm20PsiReceiver recvPSIs;
@@ -881,7 +881,7 @@ void cm20Recv(
                     std::cout << "intersection size " << recvPSIs.mIntersection.size() << " not match" << receiverSize / 2 << std::endl;
                 }
                 sort(recvPSIs.mIntersection.begin(), recvPSIs.mIntersection.end());
-                int i;
+                size_t i;
                 for (i = 0; i < recvPSIs.mIntersection.size(); i++) {
                     if (recvPSIs.mIntersection[i] != i) {
                         break;
@@ -889,7 +889,7 @@ void cm20Recv(
                 }
                 if (i != recvPSIs.mIntersection.size()) {
                     std::cout << "intersection wrong result" << std::endl;
-                } 
+                }
             }
         }
     }

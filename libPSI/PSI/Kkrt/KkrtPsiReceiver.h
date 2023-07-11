@@ -26,12 +26,12 @@ namespace osuCrypto
         NcoOtExtReceiver * mOtRecv;
 
         block mHashingSeed;
-        
+
         void init(u64 senderSize, u64 recverSize, u64 statSecParam, Channel chl0, NcoOtExtReceiver& otRecv,  block seed);
         void init(u64 senderSize, u64 recverSize, u64 statSecParam, span<Channel> chls, NcoOtExtReceiver& otRecv,  block seed);
         void sendInput(span<block> inputs, Channel& chl);
         void sendInput(span<block> inputs, span<Channel> chls);
-
+        void sendInput(std::vector<block>& inputs, Channel& chl);
     };
 
 
