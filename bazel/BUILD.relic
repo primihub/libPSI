@@ -1,27 +1,27 @@
-cc_library(
-    name = "relic",
-    hdrs = glob(["include/*.h"]) + ["include/relic_conf.h"],
-    srcs = ["librelic_s.a"],
-    includes = ["include"],
-    linkopts = ["-lpthread", "-ldl"],
-    visibility = ["//visibility:public"],
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
+
+filegroup(
+    name = "src",
+    srcs = glob(["**"]),
+    visibility = ["//visibility:public"]
 )
 
-genrule(
-    name = "relic-build",
-    srcs = glob(["**/*"], exclude=["bazel-*"]),
-    outs = [
-        "librelic_s.a",
-        "include/relic_conf.h",
-    ],
-    cmd = """
-        set -x
-        RELIC_ROOT=$$(dirname $(location CMakeLists.txt))
-        pushd $$RELIC_ROOT
-            cmake -DARCH=ARM -DWSIZE=32 .
-            make -j4
-        popd
-        cp $$RELIC_ROOT/lib/librelic_s.a $(location librelic_s.a)
-        cp $$RELIC_ROOT/include/relic_conf.h $(location include/relic_conf.h)
-    """,
+cmake(
+  name = "relic",
+  cache_entries = {
+    "CMAKE_INSTALL_LIBDIR": "lib",
+  },
+  build_args = [
+    "-j4",
+  ],
+  linkopts = [
+    "-lpthread",
+  ],
+  #includes = ["include"],
+  lib_source = ":src",
+  #out_include_dir = "include/relic",
+  out_static_libs = ["librelic_s.a"],
+  #postfix_script = "[ \"$OSTYPE\" == \"linux-gnu\" ] && objcopy --localize-symbol=bn_init $INSTALLDIR/lib/librelic_s.a",
+  #postfix_script = "objcopy --localize-symbol=bn_init $INSTALLDIR/lib/librelic_s.a",
+  visibility = ["//visibility:public"],
 )

@@ -27,28 +27,39 @@ git_repository(
   commit = "81945736a62fa8490d2ab6bb31705bb04ce4bb6c",
   remote = "https://gitee.com/primihub/rules_boost.git",
 )
+load("@com_github_nelhage_rules_boost//:boost/boost.bzl", "boost_deps")
+boost_deps()
 
-http_archive(
+new_git_repository(
+  name = "toolkit_relic",
+  build_file = "//bazel:BUILD.relic",
+  remote = "https://gitee.com/orzmzp/relic.git",
+  commit = "3f616ad64c3e63039277b8c90915607b6a2c504c",
+  shallow_since = "1581106153 -0800",
+)
+
+git_repository(
   name = "ladnir_cryptoTools",
-  strip_prefix = "cryptoTools",
-  urls = [
-    "https://primihub.oss-cn-beijing.aliyuncs.com/tools/cryptoTools_aby3_dep.tar.gz",
-  ],
+  #branch = "bazel_branch",
+  commit = "c3fb58a11f6ac1fc2cd4d8c62c081e13987deef8",
+  remote = "https://gitee.com/primihub/cryptoTools.git",
 )
 
-load("@ladnir_cryptoTools//bazel:preload.bzl", "cryptoTools_preload")
-cryptoTools_preload("ladnir_cryptoTools")
-load("@ladnir_cryptoTools//bazel:deps.bzl", "cryptoTools_deps")
-cryptoTools_deps()
-
-http_archive(
+git_repository(
   name = "osu_libote",
-  sha256 = "26ab3e3a590556abdc4d810f560bf3c201447be61da80d643120014fae8bdd4a",
-  strip_prefix = "libOTe",
-  urls = [
-    "https://primihub.oss-cn-beijing.aliyuncs.com/tools/lib_ote_aby3_dep_version.tar.gz",
-  ],
+  #branch = "bazel_branch",
+  commit = "68500e05d76aec39bb43ebfc40d6ace27a459511",
+  remote = "https://gitee.com/primihub/libOTe.git",
 )
+
+#http_archive(
+#  name = "osu_libote",
+#  sha256 = "26ab3e3a590556abdc4d810f560bf3c201447be61da80d643120014fae8bdd4a",
+#  strip_prefix = "libOTe",
+#  urls = [
+#    "https://primihub.oss-cn-beijing.aliyuncs.com/tools/lib_ote_aby3_dep_version.tar.gz",
+#  ],
+#)
 # Google dense_hash_set
 http_archive(
   name = "google_sparsehash",
